@@ -1,5 +1,6 @@
 
 const tmi = require('tmi.js');
+const fetch = require('node-fetch');
 require('dotenv').config()
 
 // Define configuration options
@@ -22,14 +23,12 @@ client.on('connected', onConnectedHandler);
 
 // Connect to Twitch:
 client.connect();
-const commandList= ['!rules', '!insta', '!twitter', '!follow', '!joke']
+const commandList= ['!rules', '!insta', '!twitter', '!follow', '!joke'];
 // Called every time a message comes in
 function onMessageHandler(target, context, msg, self){
     if(self){return;} // Ignore messages from the bot
-
     //Remove whitespaces from message
     const commandName = msg.trim();
-
     //If the commande is known, let's execute it
     if( commandName === '!rules'){
         client.say(target, `Respectez-vous, soyez polis, pas de racisme... Bref, t'as compris. Aimez-vous les uns les autres BORDEL !!!`);
@@ -45,10 +44,24 @@ function onMessageHandler(target, context, msg, self){
         client.say(target, ' Tiens mon profil twitter https://twitter.com/Oyo1505 ;)');
         console.log(`* Executed ${commandName} command`);
     }
+    else if(commandName ==='!joke'){
+        fetch('https://www.blagues-api.fr/api/random', {
+        headers: {
+            'Authorization' : `Bearer ${process.env.JOKE_TOKEN}`
+        } 
+        }).then( response => response.json())
+            .then(data=>{
+                var replyText =  data.joke +' '+ data.answer ;
+                client.say(target,replyText);
+            })
+       
+        console.log(`* Executed ${commandName} command`);
+    }
     else{
         console.log(`* Unknown command ${commandName}`);
     }
 }
+
 
 // Function called when the "dice" command is issued
 function rollDice(){
