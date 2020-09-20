@@ -22,7 +22,7 @@ client.on('connected', onConnectedHandler);
 
 // Connect to Twitch:
 client.connect();
-
+const commandList= ['!rules', '!insta', '!twitter', '!follow', '!joke']
 // Called every time a message comes in
 function onMessageHandler(target, context, msg, self){
     if(self){return;} // Ignore messages from the bot
@@ -31,11 +31,21 @@ function onMessageHandler(target, context, msg, self){
     const commandName = msg.trim();
 
     //If the commande is known, let's execute it
-    if( commandName === '!dice'){
-        const num = rollDice();
-        client.say(target, `You rolled a ${num}`);
+    if( commandName === '!rules'){
+        client.say(target, `Respectez-vous, soyez polis, pas de racisme... Bref, t'as compris. Aimez-vous les uns les autres BORDEL !!!`);
         console.log(`* Executed ${commandName} command`);
-    }else{
+    }else if(commandName ==='!insta'){
+        client.say(target, 'Le voilà : https://www.instagram.com/oyo1505/ Abonne toi :)');
+        console.log(`* Executed ${commandName} command`);
+    }
+    else if(commandName ==='!follow'){
+        client.say(target, 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️' );
+        console.log(`* Executed ${commandName} command`);
+    }else if(commandName ==='!twitter'){
+        client.say(target, ' Tiens mon profil twitter https://twitter.com/Oyo1505 ;)');
+        console.log(`* Executed ${commandName} command`);
+    }
+    else{
         console.log(`* Unknown command ${commandName}`);
     }
 }
