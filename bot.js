@@ -61,15 +61,27 @@ function onMessageHandler(target, context, msg, self){
         console.log(`* Unknown command ${commandName}`);
     }
 }
-
-
-// Function called when the "dice" command is issued
-function rollDice(){
-    const sides = 6;
-    return Math.floor(Math.random() * sides) + 1;
+//Timed function message 
+function timedMsg(){
+   var msg = 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️';
+    client.say('oyo1505', msg)
 }
 
+//check live status user 
+ function CheckOnlineStatus(){
+     var url = 'https://api.twitch.tv/helix/search/channels?query=oyo1505';
+     fetch(url, {
+         headers: {
+           'client-id' : process.env.CLIENT_ID,
+           'Authorization' :`Bearer ${process.env.TWITCH_OAUTH_TOKEN}`
+          } 
+         })
+     .then(res => res.json())
+     .then(data => data.data[0].is_live ? timedMsg : console.log('offline') );
+ }
+
+setInterval(CheckOnlineStatus, 2700000);
 // Called every time the bot connects to Twitch chat
 function onConnectedHandler (addr, port) {
     console.log(`* Connected to ${addr}:${port}`);
-  }
+}

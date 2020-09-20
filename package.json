@@ -12,6 +12,7 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "node-fetch": "^2.6.1",
-    "tmi.js": "^1.5.0"
+    "tmi.js": "^1.5.0",
+    "twitch-get-stream": "^0.6.0"
   }
 }
