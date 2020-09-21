@@ -28,14 +28,17 @@ const commandList= [
   ['!insta','Le voilà : https://www.instagram.com/oyo1505/ Abonne toi :)'],
   ['!twitter','Tiens mon profil twitter https://twitter.com/Oyo1505 ;)'],
   ['!follow', 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️'],
-  ['!joke',]];
+  ['!joke',]
+];
+
 // Called every time a message comes in
 function onMessageHandler(target, context, msg, self){
     if(self){return;} // Ignore messages from the bot
     //Remove whitespaces from message
     const commandName = msg.trim();
     //If the commande is known, let's execute it
-    commandList.find((command, index) => command[index] === commandName ? client.say(target,`${command[1]}`): console.log(`* Executed ${commandName} command`))
+    let command =  commandList.filter(command => command[0] === commandName);
+    client.say(target, `${command[0][1]}`);
      if(commandName ==='!joke'){
         fetch('https://www.blagues-api.fr/api/random', {
         headers: {
