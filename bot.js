@@ -23,28 +23,20 @@ client.on('connected', onConnectedHandler);
 
 // Connect to Twitch:
 client.connect();
-const commandList= ['!rules', '!insta', '!twitter', '!follow', '!joke'];
+const commandList= [
+  ['!rules', `Respectez-vous, soyez polis, pas de racisme... Bref, t'as compris. Aimez-vous les uns les autres BORDEL !!!` ],
+  ['!insta','Le voilà : https://www.instagram.com/oyo1505/ Abonne toi :)'],
+  ['!twitter','Tiens mon profil twitter https://twitter.com/Oyo1505 ;)'],
+  ['!follow', 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️'],
+  ['!joke',]];
 // Called every time a message comes in
 function onMessageHandler(target, context, msg, self){
     if(self){return;} // Ignore messages from the bot
     //Remove whitespaces from message
     const commandName = msg.trim();
     //If the commande is known, let's execute it
-    if( commandName === '!rules'){
-        client.say(target, `Respectez-vous, soyez polis, pas de racisme... Bref, t'as compris. Aimez-vous les uns les autres BORDEL !!!`);
-        console.log(`* Executed ${commandName} command`);
-    }else if(commandName ==='!insta'){
-        client.say(target, 'Le voilà : https://www.instagram.com/oyo1505/ Abonne toi :)');
-        console.log(`* Executed ${commandName} command`);
-    }
-    else if(commandName ==='!follow'){
-        client.say(target, 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️' );
-        console.log(`* Executed ${commandName} command`);
-    }else if(commandName ==='!twitter'){
-        client.say(target, ' Tiens mon profil twitter https://twitter.com/Oyo1505 ;)');
-        console.log(`* Executed ${commandName} command`);
-    }
-    else if(commandName ==='!joke'){
+    commandList.find((command, index) => command[index] === commandName ? client.say(target,`${command[1]}`): console.log(`* Executed ${commandName} command`))
+     if(commandName ==='!joke'){
         fetch('https://www.blagues-api.fr/api/random', {
         headers: {
             'Authorization' : `Bearer ${process.env.JOKE_TOKEN}`
@@ -56,9 +48,6 @@ function onMessageHandler(target, context, msg, self){
             })
        
         console.log(`* Executed ${commandName} command`);
-    }
-    else{
-        console.log(`* Unknown command ${commandName}`);
     }
 }
 //Timed function message 
