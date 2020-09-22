@@ -28,7 +28,7 @@ const commandList= [
   ['!insta','Le voilà : https://www.instagram.com/oyo1505/ Abonne toi :)'],
   ['!twitter','Tiens mon profil twitter https://twitter.com/Oyo1505 ;)'],
   ['!follow', 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️'],
-  ['!joke',]
+  ['!joke', getJoke().then(res => console.log(res)) ]
 ];
 
 // Called every time a message comes in
@@ -38,20 +38,7 @@ function onMessageHandler(target, context, msg, self){
     const commandName = msg.trim();
     //If the commande is known, let's execute it
     let command =  commandList.filter(command => command[0] === commandName);
-    client.say(target, `${command[0][1]}`);
-     if(commandName ==='!joke'){
-        fetch('https://www.blagues-api.fr/api/random', {
-        headers: {
-            'Authorization' : `Bearer ${process.env.JOKE_TOKEN}`
-        } 
-        }).then( response => response.json())
-            .then(data=>{
-                var replyText =  data.joke +' '+ data.answer ;
-                client.say(target,replyText);
-            })
-       
-        console.log(`* Executed ${commandName} command`);
-    }
+   command ==="!joke" ? client.say(target, `${command[0][1]}`) : getJoke().then(res => console.log(res));
 }
 //Timed function message 
 function timedMsg(){
@@ -71,6 +58,17 @@ function timedMsg(){
      .then(res => res.json())
      .then(data => data.data[0].is_live ? timedMsg : console.log('offline') );
  }
+ 
+async function getJoke(){
+   return await fetch('https://www.blagues-api.fr/api/random', {
+        headers: {
+            'Authorization' : `Bearer ${process.env.JOKE_TOKEN}`
+        } 
+        })
+        .then( response => response.json())
+        .then(data=>  data.joke +' '+ data.answer);  
+}
+
 
 setInterval(CheckOnlineStatus, 2700000);
 // Called every time the bot connects to Twitch chat
