@@ -23,14 +23,14 @@ client.on('connected', onConnectedHandler);
 
 // Connect to Twitch:
 client.connect();
+
 const commandList= [
   ['!rules', `Respectez-vous, soyez polis, pas de racisme... Bref, t'as compris. Aimez-vous les uns les autres BORDEL !!!` ],
   ['!insta','Le voilà : https://www.instagram.com/oyo1505/ Abonne toi :)'],
   ['!twitter','Tiens mon profil twitter https://twitter.com/Oyo1505 ;)'],
   ['!follow', 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️'],
-  ['!joke', getJoke().then(res => console.log(res)) ]
+  ['!joke', getJoke().then(res => res) ]
 ];
-
 // Called every time a message comes in
 function onMessageHandler(target, context, msg, self){
     if(self){return;} // Ignore messages from the bot
@@ -38,9 +38,10 @@ function onMessageHandler(target, context, msg, self){
     const commandName = msg.trim();
     //If the commande is known, let's execute it
     let command =  commandList.filter(command => command[0] === commandName);
-   command ==="!joke" ? client.say(target, `${command[0][1]}`) : getJoke().then(res => console.log(res));
+   console.log(command[0][1])
+   command[0] ? client.say(target, `${command[0][1]}`) : console.log('Unknown command');
 }
-//Timed function message 
+//Timed function message 1
 function timedMsg(){
    var msg = 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️';
     client.say('oyo1505', msg)
