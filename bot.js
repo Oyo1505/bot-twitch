@@ -40,12 +40,12 @@ function onMessageHandler(target, context, msg, self){
     const commandName = msg.trim();
     //If the commande is known, let's execute it
     let command =  commandList.filter(command => command[0] === commandName);
-   command[0] && command[0][1]  ? client.say(target, `${command[0][1]}`) : (command[0][0] === "!joke" ? runJoke(target) : console.log('Unknown tes'));
+   command[0] && command[0][1]  ? client.say(target, `${command[0][1]}`) : (command[0][0] === "!joke" ? runJoke(target) : console.log('Unknown command'));
 }
-// Timed function message 1
+// Timed function message
 function timedMsg(){ 
    var msg = 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️';
-    client.say('oyo1505', msg)
+    client.say('#oyo1505', msg)
 }
 
 async function runJoke(channel){
