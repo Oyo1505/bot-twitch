@@ -19,7 +19,17 @@ const client = new tmi.client(opts);
 // Register our event handlers (defined below)
 client.on('message', onMessageHandler);
 client.on('connected', onConnectedHandler);
-
+client.on("join", (channel, username, self) => {
+  if(self){return;} // Ignore messages from the bot
+  client.say(channel, `Bonjour ${username} ! :)`)
+});
+client.on("chat", (channel, userstate, message, self) => {
+  // Don't listen to my own messages..
+  if (self) return;
+  if(userstate.username !== "moodbot" && message && onLive){
+    timedMsg(channel)
+  }
+});
 // Connect to Twitch:
 client.connect();
 
@@ -44,40 +54,31 @@ function onMessageHandler(target, context, msg, self){
  
 // Timed function message
 function timedMsg(target){ 
-   var msg = 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️';
+  setInterval(function() {
+    var msg = 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️';
     client.say(target, msg)
+  }, 2700000);
 }
 
-async function runJoke(channel){
-  const data =  await getJoke();
-  client.say(channel, `${data}`)
-}
 
 //check live status user 
- function CheckOnlineStatus(){
-     var url = 'https://api.twitch.tv/helix/search/channels?query=tonton';
-     fetch(url, {
-         headers: {
-           'client-id' : process.env.CLIENT_ID,
-           'Authorization' :`Bearer ${process.env.TWITCH_OAUTH_TOKEN}`
-          } 
-         })
-     .then(res => res.json())
-     .then(data => data.data[0].is_live ? timedMsg() : console.log('offline') );
- }
- /* getLiveInformationUser()
- function getLiveInformationUser(){
-  var url = 'https://api.twitch.tv/helix/streams?user_id=55468567';
-  fetch(url, {
+ async function getLiveInformationUser(){
+  var url = 'https://api.twitch.tv/helix/streams?user_login=oyo1505';
+ return fetch(url, {
       headers: {
         'client-id' : process.env.CLIENT_ID,
         'Authorization' :`Bearer ${process.env.TWITCH_OAUTH_TOKEN}`
        } 
       })
   .then(res => res.json())
-  .then(data =>  console.log(data) );
-}*/
-/*tttest()
+  .then(data =>data.data[0]);
+}
+async function onLive(){
+  let live = await getLiveInformationUser()
+  return live.type ==="live";
+}
+onLive()
+//tttest()
  function tttest(){
   var url = 'https://api.twitch.tv/helix/streams';
   fetch(url, {
@@ -87,10 +88,10 @@ async function runJoke(channel){
        } 
       })
   .then(res => res.json())
-  .then(data =>  data.data[0].type === 'live' ? client.on('message', timedMsg) : console.log('offline') );
-   //.then(data => console.log(data.data[0].type === 'live'))
+  //.then(data =>  data.data[0].type === 'live' ? client.on('message', timedMsg) : console.log('offline') );
+   .then(data => console.log(data))
 }
-*/
+
 /*function newFollower(){
   var url= 'https://api.twitch.tv/helix/users/follows?first=1&to_id=55468567';
 
@@ -104,6 +105,10 @@ async function getJoke(){
         })
         .then( response => response.json())
         .then(data=>  data.joke +' '+ data.answer);  
+}
+async function runJoke(channel){
+  const data =  await getJoke();
+  client.say(channel, `${data}`)
 }
 
 // Called every time the bot connects to Twitch chat
