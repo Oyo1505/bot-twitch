@@ -20,8 +20,6 @@ const client = new tmi.client(opts);
 client.on('message', onMessageHandler);
 client.on('connected', onConnectedHandler);
 
-setInterval(CheckOnlineStatus, 2700000);
-
 // Connect to Twitch:
 client.connect();
 
@@ -40,12 +38,14 @@ function onMessageHandler(target, context, msg, self){
     const commandName = msg.trim();
     //If the commande is known, let's execute it
     let command =  commandList.filter(command => command[0] === commandName);
-   command[0] && command[0][1]  ? client.say(target, `${command[0][1]}`) : (command[0][0] === "!joke" ? runJoke(target) : console.log('Unknown command'));
-}
+   command[0] && command[0][1]  ? client.say(target, `${command[0][1]}`) : (command[0] && command[0][0] && command[0][0] === "!joke" ? runJoke(target) : console.log('Unknown command'));
+    
+  }
+ 
 // Timed function message
-function timedMsg(){ 
+function timedMsg(target){ 
    var msg = 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️';
-    client.say('#oyo1505', msg)
+    client.say(target, msg)
 }
 
 async function runJoke(channel){
@@ -55,7 +55,7 @@ async function runJoke(channel){
 
 //check live status user 
  function CheckOnlineStatus(){
-     var url = 'https://api.twitch.tv/helix/search/channels?query=oyo1505';
+     var url = 'https://api.twitch.tv/helix/search/channels?query=tonton';
      fetch(url, {
          headers: {
            'client-id' : process.env.CLIENT_ID,
@@ -65,7 +65,37 @@ async function runJoke(channel){
      .then(res => res.json())
      .then(data => data.data[0].is_live ? timedMsg() : console.log('offline') );
  }
- 
+ /* getLiveInformationUser()
+ function getLiveInformationUser(){
+  var url = 'https://api.twitch.tv/helix/streams?user_id=55468567';
+  fetch(url, {
+      headers: {
+        'client-id' : process.env.CLIENT_ID,
+        'Authorization' :`Bearer ${process.env.TWITCH_OAUTH_TOKEN}`
+       } 
+      })
+  .then(res => res.json())
+  .then(data =>  console.log(data) );
+}*/
+/*tttest()
+ function tttest(){
+  var url = 'https://api.twitch.tv/helix/streams';
+  fetch(url, {
+      headers: {
+        'client-id' : process.env.CLIENT_ID,
+        'Authorization' :`Bearer ${process.env.TWITCH_OAUTH_TOKEN}`
+       } 
+      })
+  .then(res => res.json())
+  .then(data =>  data.data[0].type === 'live' ? client.on('message', timedMsg) : console.log('offline') );
+   //.then(data => console.log(data.data[0].type === 'live'))
+}
+*/
+/*function newFollower(){
+  var url= 'https://api.twitch.tv/helix/users/follows?first=1&to_id=55468567';
+
+}
+ */
 async function getJoke(){
    return  fetch('https://www.blagues-api.fr/api/random', {
         headers: {
@@ -75,8 +105,6 @@ async function getJoke(){
         .then( response => response.json())
         .then(data=>  data.joke +' '+ data.answer);  
 }
-
-
 
 // Called every time the bot connects to Twitch chat
 function onConnectedHandler (addr, port) {
