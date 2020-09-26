@@ -77,21 +77,6 @@ async function onLive(){
   let live = await getLiveInformationUser()
   return live.type ==="live";
 }
-onLive()
-//tttest()
- function tttest(){
-  var url = 'https://api.twitch.tv/helix/streams';
-  fetch(url, {
-      headers: {
-        'client-id' : process.env.CLIENT_ID,
-        'Authorization' :`Bearer ${process.env.TWITCH_OAUTH_TOKEN}`
-       } 
-      })
-  .then(res => res.json())
-  //.then(data =>  data.data[0].type === 'live' ? client.on('message', timedMsg) : console.log('offline') );
-   .then(data => console.log(data))
-}
-
 /*function newFollower(){
   var url= 'https://api.twitch.tv/helix/users/follows?first=1&to_id=55468567';
 
