@@ -21,7 +21,7 @@ client.on('message', onMessageHandler);
 client.on('connected', onConnectedHandler);
 client.on("join", (channel, username, self) => {
   if(self){return;} // Ignore messages from the bot
-  client.say(channel, `Bonjour ${username} ! :)`)
+  onLive ? client.say(channel, `Bonjour ${username} ! :)`) : console.log("offline");
 });
 client.on("chat", (channel, userstate, message, self) => {
   // Don't listen to my own messages..
