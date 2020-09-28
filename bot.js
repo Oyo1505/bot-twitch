@@ -26,9 +26,9 @@ client.on("join", (channel, username, self) => {
 client.on("chat", (channel, userstate, message, self) => {
   // Don't listen to my own messages..
   if (self) return;
-  if(userstate.username !== "moodbot" && message && onLive){
+ /* if(userstate.username !== "moodbot" && message && onLive){
     timedMsg(channel)
-  }
+  }*/
 });
 // Connect to Twitch:
 client.connect();
