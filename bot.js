@@ -21,12 +21,12 @@ client.on('message', onMessageHandler);
 client.on('connected', onConnectedHandler);
 client.on("join", (channel, username, self) => {
   if(self){return;} // Ignore messages from the bot
-  onLive ? client.say(channel, `Bonjour ${username} ! :)`) : console.log("offline");
+  onLiveMessageToUser(channel, username);
 });
 client.on("chat", (channel, userstate, message, self) => {
   // Don't listen to my own messages..
   if (self) return;
- /* if(userstate.username !== "moodbot" && message && onLive){
+ /* if(message && onLive){
     timedMsg(channel)
   }*/
 });
@@ -40,6 +40,8 @@ const commandList= [
   ['!follow', 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️'],
   ['!joke' ],
 ];
+
+const usersOnChat = [];
 
 // Called every time a message comes in
 function onMessageHandler(target, context, msg, self){
@@ -71,12 +73,22 @@ function timedMsg(target){
        } 
       })
   .then(res => res.json())
-  .then(data =>data.data[0]);
+  .then(data => data.data[0]);
 }
-async function onLive(){
-  let live = await getLiveInformationUser()
-  return live.type ==="live";
+
+async function onLiveMessageToUser(channel, username){
+const live = await getLiveInformationUser();
+  if(live && live.type === 'live' && !usersOnChat.includes(username)){
+    usersOnChat.push(username)
+    client.say(channel, `Bonjour ${username} ! :)`);
+    console.log(usersOnChat)
+  }else if(!live){
+    usersOnChat.splice(0, usersOnChat.length)
+    console.log("offline");
+  } 
 }
+
+
 /*function newFollower(){
   var url= 'https://api.twitch.tv/helix/users/follows?first=1&to_id=55468567';
 
