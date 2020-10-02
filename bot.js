@@ -26,6 +26,7 @@ client.on("join", (channel, username, self) => {
 client.on("chat", (channel, userstate, message, self) => {
   // Don't listen to my own messages..
   if (self) return;
+  sendMessageNewFollower(channel)
  /* if(message && onLive){
     timedMsg(channel)
   }*/
@@ -41,7 +42,7 @@ const commandList= [
   ['!joke' ],
 ];
 
-const usersOnChat = [];
+const usersOnChat = ["oyo1505", "commanderroot", "lurxx", "anotherttvviewer", "wizbot", "moodbot"];
 
 // Called every time a message comes in
 function onMessageHandler(target, context, msg, self){
@@ -51,7 +52,6 @@ function onMessageHandler(target, context, msg, self){
     //If the commande is known, let's execute it
     let command =  commandList.filter(command => command[0] === commandName);
    command[0] && command[0][1]  ? client.say(target, `${command[0][1]}`) : (command[0] && command[0][0] && command[0][0] === "!joke" ? runJoke(target) : console.log('Unknown command'));
-    
   }
  
 // Timed function message
@@ -81,19 +81,29 @@ const live = await getLiveInformationUser();
   if(live && live.type === 'live' && !usersOnChat.includes(username)){
     usersOnChat.push(username)
     client.say(channel, `Bonjour ${username} ! :)`);
-    console.log(usersOnChat)
   }else if(!live){
-    usersOnChat.splice(0, usersOnChat.length)
+    usersOnChat.splice(6, usersOnChat.length)
     console.log("offline");
   } 
 }
-
-
-/*function newFollower(){
+/*get new follower*/
+async function getNewFollower(){
   var url= 'https://api.twitch.tv/helix/users/follows?first=1&to_id=55468567';
-
+  return await fetch(url, {
+    headers: {
+      'client-id' : process.env.CLIENT_ID,
+      'Authorization' :`Bearer ${process.env.TWITCH_OAUTH_TOKEN}`
+     } 
+    })
+.then(res => res.json())
+.then(data => data.data);
 }
- */
+
+async function sendMessageNewFollower(channel){
+  const follower = await getNewFollower();
+  client.say(channel, `Bienvenue à toi ${follower[0].from_name} et merci pour le soutien ! :) `);
+}
+sendMessageNewFollower()
 async function getJoke(){
    return  fetch('https://www.blagues-api.fr/api/random', {
         headers: {
