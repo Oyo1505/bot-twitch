@@ -42,7 +42,7 @@ const commandList= [
   ['!joke' ],
 ];
 
-const usersOnChat = ["oyo1505", "commanderroot", "lurxx", "anotherttvviewer", "wizbot", "moodbot"];
+const usersOnChat = ["oyo1505", "commanderroot", "lurxx", "anotherttvviewer", "wizbot", "moobot"];
 
 // Called every time a message comes in
 function onMessageHandler(target, context, msg, self){
