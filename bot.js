@@ -26,7 +26,7 @@ client.on("join", (channel, username, self) => {
 client.on("chat", (channel, userstate, message, self) => {
   // Don't listen to my own messages..
   if (self) return;
-  sendMessageNewFollower(channel)
+ // sendMessageNewFollower(channel)
  /* if(message && onLive){
     timedMsg(channel)
   }*/
