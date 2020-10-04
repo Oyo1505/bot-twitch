@@ -28,7 +28,7 @@ client.on("chat", (channel, userstate, message, self) => {
   // Don't listen to my own messages..
   if (self) return;
  
-    timedMsg(channel);
+   // timedMsg(channel);
 });
 
 /*client.on("notice",  (channel, username, methods ) =>{
