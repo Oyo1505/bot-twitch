@@ -76,7 +76,7 @@ async function timedMsg(target){
 //id soiaok = 516281655
 //check live status user 
  async function getLiveInformationUser(){
-  var url = 'https://api.twitch.tv/helix/streams?user_login=soiaok';
+  var url = 'https://api.twitch.tv/helix/streams?user_login=oyo1505';
  return fetch(url, {
       headers: {
         'client-id' : process.env.CLIENT_ID,
