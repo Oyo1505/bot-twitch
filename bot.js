@@ -9,7 +9,8 @@ const opts = {
       password: process.env.PASSWORD,
     },
     channels: [
-        'oyo1505'
+        'oyo1505',
+        'soiaok'
       ]
 };
 
@@ -26,11 +27,15 @@ client.on("join", (channel, username, self) => {
 client.on("chat", (channel, userstate, message, self) => {
   // Don't listen to my own messages..
   if (self) return;
- // sendMessageNewFollower(channel)
- /* if(message && onLive){
-    timedMsg(channel)
-  }*/
+ 
+    timedMsg(channel);
 });
+
+/*client.on("notice",  (channel, username, methods ) =>{
+
+  console.log("ttt")
+  sendMessageNewFollower(channel);
+});*/
 // Connect to Twitch:
 client.connect();
 
@@ -39,10 +44,10 @@ const commandList= [
   ['!insta','Le voilà : https://www.instagram.com/oyo1505/ Abonne toi :)'],
   ['!twitter','Tiens mon profil twitter https://twitter.com/Oyo1505 ;)'],
   ['!follow', 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️'],
-  ['!joke' ],
+  ['!joke'],
 ];
 
-const usersOnChat = ["oyo1505", "commanderroot", "lurxx", "anotherttvviewer", "wizbot", "moobot"];
+const usersOnChat = ["oyo1505", "commanderroot", "lurxx", "anotherttvviewer", "wizebot", "moobot"];
 
 // Called every time a message comes in
 function onMessageHandler(target, context, msg, self){
@@ -55,17 +60,23 @@ function onMessageHandler(target, context, msg, self){
   }
  
 // Timed function message
-function timedMsg(target){ 
+async function timedMsg(target){ 
+  const live = await getLiveInformationUser();
   setInterval(function() {
-    var msg = 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️';
+    if(live && live.type === 'live'){
+      var msg = 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️';
     client.say(target, msg)
+    }else if (!live){
+     return
+    }
   }, 2700000);
 }
 
-
+//id oyo1505 = 55468567
+//id soiaok = 516281655
 //check live status user 
  async function getLiveInformationUser(){
-  var url = 'https://api.twitch.tv/helix/streams?user_login=oyo1505';
+  var url = 'https://api.twitch.tv/helix/streams?user_login=soiaok';
  return fetch(url, {
       headers: {
         'client-id' : process.env.CLIENT_ID,
@@ -73,7 +84,7 @@ function timedMsg(target){
        } 
       })
   .then(res => res.json())
-  .then(data => data.data[0]);
+  .then(data =>data.data[0]);
 }
 
 async function onLiveMessageToUser(channel, username){
@@ -96,14 +107,19 @@ async function getNewFollower(){
      } 
     })
 .then(res => res.json())
-.then(data => data.data);
+.then(data => data.data[0]);
 }
 
 async function sendMessageNewFollower(channel){
   const follower = await getNewFollower();
-  client.say(channel, `Bienvenue à toi ${follower[0].from_name} et merci pour le soutien ! :) `);
+  if(follower){
+    client.say(channel, `Bienvenue à toi ${follower.from_name} et merci pour le soutien ! :) `);
+
+  }else{
+    console.log("test")
+  }
 }
-sendMessageNewFollower()
+
 async function getJoke(){
    return  fetch('https://www.blagues-api.fr/api/random', {
         headers: {
