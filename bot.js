@@ -6,17 +6,41 @@ require('dotenv').config()
 class BotFighter {
   constructor(){
     this.life = 0;
+    this.fightEngaged = false
   }
    setLife(){
     this.life = 100;
   }
   takeHit(){
-    this.life = this.life - this.getRandomHit()
+    this.fightEngaged ? this.life = this.life - this.getRandomHit() : client.say('#oyo1505', 'Je suis pas en combat mon petit');
   }
   getRandomHit(){
     return Math.floor(Math.random() * (100 - 50 +1)) + 50;
   }
+   startFight(channel){
+    this.setLife()
+    if(!this.fightEngaged){
+      client.say(channel, "FIIIGHT !!!!!!!!!!!!!!!!!!!!");
+      setTimeout(()=> client.say(channel, `J'ai ${this.life} point de vie! Essayer de me battre petits cloporte`), 2000)
+      this.fightEngaged = !this.fightEngaged;
+    }
+  } 
+   onFight(channel, user) {
+     console.log(this.life)
+     if(this.life <= 0 && this.fightEngaged){     
+      client.say(channel, `Bien... ${user} Vous m'avez battu...`)
+      this.fightEngaged = false;
+       return;
+     }else if(this.fightEngaged === false){
+      client.say(channel, "Je ne suis plus en combat petit cloporte")
+      return;
+     }else{
+      this.takeHit();
+     }
+  }
 }
+//init botFighter
+const botFighter = new BotFighter()
 
 // Define configuration options
 const opts = {
@@ -64,6 +88,7 @@ const usersOnChat = ["oyo1505", "commanderroot", "lurxx", "anotherttvviewer", "w
 
 // Called every time a message comes in
 function onMessageHandler(target, context, msg, self){
+  const pseudo = context['display-name'];
     if(self){return;} // Ignore messages from the bot
     //Remove whitespaces from message
     const commandName = msg.trim();
@@ -71,8 +96,10 @@ function onMessageHandler(target, context, msg, self){
     let command =  commandList.filter(command => command[0] === commandName);
    command[0] && command[0][1]  ? 
     client.say(target, `${command[0][1]}`)
-   : (command[0] && command[0][0] && command[0][0] === "!joke" ? runJoke(target) 
-   :(command[0] && command[0][0] && command[0][0] === "!fight"? startFight() : console.log('Unknown command')));
+   :(command[0] && command[0][0] && command[0][0] === "!joke" ? runJoke(target) 
+   :(command[0] && command[0][0] && command[0][0] === "!fight"? botFighter.startFight(target)
+   :(command[0] && command[0][0] && command[0][0] === "!pif"  || command[0] && command[0][0] && command[0][0] === "!paf"? botFighter.onFight(target, pseudo)
+   :console.log('Unknown command'))));
   }
  
 // Timed function message
@@ -153,20 +180,7 @@ async function runJoke(channel){
 }
 
 
-function startFight(){
-  var botFighter = new BotFighter()
-  botFighter.setLife()
-  client.say("#oyo1505", "FIIIGHT !!!!!!!!!!!!!!!!!!!!")
-  setTimeout(()=> client.say("#oyo1505", "J'ai 1000 point de vie! Essayer de me battre petits cloporte"), 2000)
-  var engagedFight = false;
-  while(botFighter.life>0){
-   onFight(botFighter)
-  }
-}
 
-function onFight(bot) {
-    console.log(bot)
-}
 
 // Called every time the bot connects to Twitch chat
 function onConnectedHandler (addr, port) {
