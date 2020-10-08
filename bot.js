@@ -2,6 +2,22 @@ const tmi = require('tmi.js');
 const fetch = require('node-fetch');
 require('dotenv').config()
 
+//fight Bot
+class BotFighter {
+  constructor(){
+    this.life = 0;
+  }
+   setLife(){
+    this.life = 100;
+  }
+  takeHit(){
+    this.life = this.life - this.getRandomHit()
+  }
+  getRandomHit(){
+    return Math.floor(Math.random() * (100 - 50 +1)) + 50;
+  }
+}
+
 // Define configuration options
 const opts = {
     identity: {
@@ -27,15 +43,9 @@ client.on("join", (channel, username, self) => {
 client.on("chat", (channel, userstate, message, self) => {
   // Don't listen to my own messages..
   if (self) return;
- 
-   // timedMsg(channel);
+ // timedMsg(channel)
 });
 
-/*client.on("notice",  (channel, username, methods ) =>{
-
-  console.log("ttt")
-  sendMessageNewFollower(channel);
-});*/
 // Connect to Twitch:
 client.connect();
 
@@ -45,6 +55,9 @@ const commandList= [
   ['!twitter','Tiens mon profil twitter https://twitter.com/Oyo1505 ;)'],
   ['!follow', 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️'],
   ['!joke'],
+  ['!fight'],
+  ['!paf'],
+  ['!pif']
 ];
 
 const usersOnChat = ["oyo1505", "commanderroot", "lurxx", "anotherttvviewer", "wizebot", "moobot"];
@@ -56,7 +69,10 @@ function onMessageHandler(target, context, msg, self){
     const commandName = msg.trim();
     //If the commande is known, let's execute it
     let command =  commandList.filter(command => command[0] === commandName);
-   command[0] && command[0][1]  ? client.say(target, `${command[0][1]}`) : (command[0] && command[0][0] && command[0][0] === "!joke" ? runJoke(target) : console.log('Unknown command'));
+   command[0] && command[0][1]  ? 
+    client.say(target, `${command[0][1]}`)
+   : (command[0] && command[0][0] && command[0][0] === "!joke" ? runJoke(target) 
+   :(command[0] && command[0][0] && command[0][0] === "!fight"? startFight() : console.log('Unknown command')));
   }
  
 // Timed function message
@@ -67,9 +83,9 @@ async function timedMsg(target){
       var msg = 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️';
     client.say(target, msg)
     }else if (!live){
-     return
+    return
     }
-  }, 2700000);
+  }, 18000);
 }
 
 //id oyo1505 = 55468567
@@ -97,6 +113,8 @@ const live = await getLiveInformationUser();
     console.log("offline");
   } 
 }
+
+
 /*get new follower*/
 async function getNewFollower(){
   var url= 'https://api.twitch.tv/helix/users/follows?first=1&to_id=55468567';
@@ -114,11 +132,11 @@ async function sendMessageNewFollower(channel){
   const follower = await getNewFollower();
   if(follower){
     client.say(channel, `Bienvenue à toi ${follower.from_name} et merci pour le soutien ! :) `);
-
   }else{
     console.log("test")
   }
 }
+
 
 async function getJoke(){
    return  fetch('https://www.blagues-api.fr/api/random', {
@@ -132,6 +150,22 @@ async function getJoke(){
 async function runJoke(channel){
   const data =  await getJoke();
   client.say(channel, `${data}`)
+}
+
+
+function startFight(){
+  var botFighter = new BotFighter()
+  botFighter.setLife()
+  client.say("#oyo1505", "FIIIGHT !!!!!!!!!!!!!!!!!!!!")
+  setTimeout(()=> client.say("#oyo1505", "J'ai 1000 point de vie! Essayer de me battre petits cloporte"), 2000)
+  var engagedFight = false;
+  while(botFighter.life>0){
+   onFight(botFighter)
+  }
+}
+
+function onFight(bot) {
+    console.log(bot)
 }
 
 // Called every time the bot connects to Twitch chat
