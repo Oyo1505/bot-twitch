@@ -12,7 +12,8 @@ class BotFighter {
     this.life = 100;
   }
   takeHit(){
-    this.fightEngaged ? this.life = this.life - this.getRandomHit() : client.say('#oyo1505', 'Je suis pas en combat mon petit');
+    return this.life = this.life - this.getRandomHit() 
+  
   }
   getRandomHit(){
     return Math.floor(Math.random() * (100 - 50 +1)) + 50;
@@ -20,22 +21,22 @@ class BotFighter {
    startFight(channel){
     this.setLife()
     if(!this.fightEngaged){
-      client.say(channel, "FIIIGHT !!!!!!!!!!!!!!!!!!!!");
-      setTimeout(()=> client.say(channel, `J'ai ${this.life} point de vie! Essayer de me battre petits cloporte`), 2000)
-      this.fightEngaged = !this.fightEngaged;
+    client.say(channel, "FIIIGHT !!!!!!!!!!!!!!!!!!!!");
+    client.say(channel, `J'ai ${this.life} point de vie! Essayer de me battre petits cloportes`);
+    this.fightEngaged = !this.fightEngaged;
     }
   } 
    onFight(channel, user) {
-     console.log(this.life)
-     if(this.life <= 0 && this.fightEngaged){     
-      client.say(channel, `Bien... ${user} Vous m'avez battu...`)
+     const life =  this.takeHit();
+     if(life <= 0 && this.fightEngaged){     
+      client.say(channel, `Bien... ${user} Vous m'avez battu...`);
       this.fightEngaged = false;
        return;
      }else if(this.fightEngaged === false){
       client.say(channel, "Je ne suis plus en combat petit cloporte")
       return;
      }else{
-      this.takeHit();
+      client.say(channel, `Il me reste ${this.life} de point de vie`)
      }
   }
 }
@@ -68,6 +69,12 @@ client.on("chat", (channel, userstate, message, self) => {
   // Don't listen to my own messages..
   if (self) return;
  // timedMsg(channel)
+ client.commercial("#oyo1505", 30).then((data) => {
+   console.log("test")
+  // data returns [channel, seconds]
+}).catch((err) => {
+  //
+});
 });
 
 // Connect to Twitch:
@@ -84,7 +91,7 @@ const commandList= [
   ['!pif']
 ];
 
-const usersOnChat = ["oyo1505", "commanderroot", "lurxx", "anotherttvviewer", "wizebot", "moobot"];
+const usersOnChat = ["oyo1505", "commanderroot", "anotherttvviewer", "wizebot", "moobot"];
 
 // Called every time a message comes in
 function onMessageHandler(target, context, msg, self){
@@ -97,8 +104,8 @@ function onMessageHandler(target, context, msg, self){
    command[0] && command[0][1]  ? 
     client.say(target, `${command[0][1]}`)
    :(command[0] && command[0][0] && command[0][0] === "!joke" ? runJoke(target) 
-   :(command[0] && command[0][0] && command[0][0] === "!fight"? botFighter.startFight(target)
-   :(command[0] && command[0][0] && command[0][0] === "!pif"  || command[0] && command[0][0] && command[0][0] === "!paf"? botFighter.onFight(target, pseudo)
+   :(command[0] && command[0][0] && command[0][0] === "!fight" ? botFighter.startFight(target)
+   :(command[0] && command[0][0] &&  command[0][0] === "!pif" || command[0] && command[0][0] && command[0][0] === "!paf"? botFighter.onFight(target, pseudo)
    :console.log('Unknown command'))));
   }
  
@@ -136,7 +143,7 @@ const live = await getLiveInformationUser();
     usersOnChat.push(username)
     client.say(channel, `Bonjour ${username} ! :)`);
   }else if(!live){
-    usersOnChat.splice(6, usersOnChat.length)
+    usersOnChat.splice(4, usersOnChat.length)
     console.log("offline");
   } 
 }
