@@ -1,5 +1,6 @@
 const tmi = require('tmi.js');
 const fetch = require('node-fetch');
+const { time } = require('console');
 require('dotenv').config()
 
 //fight Bot
@@ -9,7 +10,7 @@ class BotFighter {
     this.fightEngaged = false
   }
    setLife(){
-    this.life = 100;
+    this.life = 500;
   }
   takeHit(){
     return this.life = this.life - this.getRandomHit() 
@@ -58,23 +59,31 @@ const opts = {
 // Create a client with our options
 const client = new tmi.client(opts);
 
+//timed message
+let loopInterval
+client.on('chat', (channel, userstate, message, self) => {
+  if (self) return
+  const msg = message.split(' ')
+  if (msg[0].toLowerCase() === '!loop') {
+
+    if (loopInterval) { // Check if set
+      console.log('stop !loop')
+      clearInterval(loopInterval) // delete Timer
+      loopInterval = false
+    } else {
+      console.log('start !loop')
+      loopInterval = setInterval(function () {
+        client.say(channel, 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️') // client.say(channel, msg[1]) // ?
+      }, 2700000 ) // 45min
+    }
+  }
+});
 // Register our event handlers (defined below)
 client.on('message', onMessageHandler);
 client.on('connected', onConnectedHandler);
 client.on("join", (channel, username, self) => {
   if(self){return;} // Ignore messages from the bot
   onLiveMessageToUser(channel, username);
-});
-client.on("chat", (channel, userstate, message, self) => {
-  // Don't listen to my own messages..
-  if (self) return;
- // timedMsg(channel)
- client.commercial("#oyo1505", 30).then((data) => {
-   console.log("test")
-  // data returns [channel, seconds]
-}).catch((err) => {
-  //
-});
 });
 
 // Connect to Twitch:
@@ -108,20 +117,6 @@ function onMessageHandler(target, context, msg, self){
    :(command[0] && command[0][0] &&  command[0][0] === "!pif" || command[0] && command[0][0] && command[0][0] === "!paf"? botFighter.onFight(target, pseudo)
    :console.log('Unknown command'))));
   }
- 
-// Timed function message
-async function timedMsg(target){ 
-  const live = await getLiveInformationUser();
-  setInterval(function() {
-    if(live && live.type === 'live'){
-      var msg = 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️';
-    client.say(target, msg)
-    }else if (!live){
-    return
-    }
-  }, 18000);
-}
-
 //id oyo1505 = 55468567
 //id soiaok = 516281655
 //check live status user 
