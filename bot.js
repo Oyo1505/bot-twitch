@@ -1,48 +1,12 @@
+
 const tmi = require('tmi.js');
 const fetch = require('node-fetch');
-const { time } = require('console');
 require('dotenv').config()
+let bot = require('./BotFighter');
 
-//fight Bot
-class BotFighter {
-  constructor(){
-    this.life = 0;
-    this.fightEngaged = false
-  }
-   setLife(){
-    this.life = 500;
-  }
-  takeHit(){
-    return this.life = this.life - this.getRandomHit() 
-  
-  }
-  getRandomHit(){
-    return Math.floor(Math.random() * (100 - 50 +1)) + 50;
-  }
-   startFight(channel){
-    this.setLife()
-    if(!this.fightEngaged){
-    client.say(channel, "FIIIGHT !!!!!!!!!!!!!!!!!!!!");
-    client.say(channel, `J'ai ${this.life} point de vie! Essayer de me battre petits cloportes`);
-    this.fightEngaged = !this.fightEngaged;
-    }
-  } 
-   onFight(channel, user) {
-     const life =  this.takeHit();
-     if(life <= 0 && this.fightEngaged){     
-      client.say(channel, `Bien... ${user} Vous m'avez battu...`);
-      this.fightEngaged = false;
-       return;
-     }else if(this.fightEngaged === false){
-      client.say(channel, "Je ne suis plus en combat petit cloporte")
-      return;
-     }else{
-      client.say(channel, `Il me reste ${this.life} de point de vie`)
-     }
-  }
-}
 //init botFighter
-const botFighter = new BotFighter()
+let  Bot = bot.BotFighter
+const botFighter = new Bot();
 
 // Define configuration options
 const opts = {
@@ -63,7 +27,14 @@ const client = new tmi.client(opts);
 let loopInterval
 client.on('chat', (channel, userstate, message, self) => {
   if (self) return
+  console.log(userstate.username)
+  client.whisper(userstate.username, 'hello').then(function(data) {
+    console.log('data', data);
+  }).catch(function(err) {
+    console.log('something went wrong', err);
+  });
   const msg = message.split(' ')
+
   if (msg[0].toLowerCase() === '!loop') {
 
     if (loopInterval) { // Check if set
@@ -84,7 +55,9 @@ client.on('connected', onConnectedHandler);
 client.on("join", (channel, username, self) => {
   if(self){return;} // Ignore messages from the bot
   onLiveMessageToUser(channel, username);
+  
 });
+
 
 // Connect to Twitch:
 client.connect();
@@ -100,11 +73,12 @@ const commandList= [
   ['!pif']
 ];
 
-const usersOnChat = ["oyo1505", "commanderroot", "anotherttvviewer", "wizebot", "moobot"];
+const usersOnChat = [ "commanderroot", "anotherttvviewer", "wizebot", "moobot"];
 
 // Called every time a message comes in
 function onMessageHandler(target, context, msg, self){
   const pseudo = context['display-name'];
+console.log(self)
     if(self){return;} // Ignore messages from the bot
     //Remove whitespaces from message
     const commandName = msg.trim();
@@ -134,18 +108,18 @@ function onMessageHandler(target, context, msg, self){
 
 async function onLiveMessageToUser(channel, username){
 const live = await getLiveInformationUser();
+client.say(channel, `Bonjour ${username} ! :)`);
+    //privateMessageBot(username);
   if(live && live.type === 'live' && !usersOnChat.includes(username)){
     usersOnChat.push(username)
     client.say(channel, `Bonjour ${username} ! :)`);
+
   }else if(!live){
     usersOnChat.splice(4, usersOnChat.length)
-    console.log("offline");
   } 
 }
-
-
 /*get new follower*/
-async function getNewFollower(){
+async function getLastFollower(){
   var url= 'https://api.twitch.tv/helix/users/follows?first=1&to_id=55468567';
   return await fetch(url, {
     headers: {
@@ -154,18 +128,29 @@ async function getNewFollower(){
      } 
     })
 .then(res => res.json())
-.then(data => data.data[0]);
+.then(data => data);
 }
 
-async function sendMessageNewFollower(channel){
-  const follower = await getNewFollower();
-  if(follower){
-    client.say(channel, `Bienvenue à toi ${follower.from_name} et merci pour le soutien ! :) `);
-  }else{
-    console.log("test")
-  }
+
+async function getFollowers(){
+  var url= 'https://api.twitch.tv/helix/users/follows?to_id=55468567';
+  return await fetch(url, {
+    headers: {
+      'client-id' : process.env.CLIENT_ID,
+      'Authorization' :`Bearer ${process.env.TWITCH_OAUTH_TOKEN}`
+     } 
+    })
+.then(res => res.json())
+.then(data => data.data);
 }
 
+
+setInterval(()=> newFollowerNotif(), 10000);
+async function newFollowerNotif(){
+  const lastFollower = await getLastFollower();
+  const userFollowers = await getFollowers();
+  userFollowers.map(follower => follower.from_id === lastFollower.data[0].from_id) ? clearInterval(): client.say(channel, `Bienvenue à ${lastFollower.data[0].from_name}, tu as très bon goût sache le`);
+}
 
 async function getJoke(){
    return  fetch('https://www.blagues-api.fr/api/random', {
@@ -180,9 +165,6 @@ async function runJoke(channel){
   const data =  await getJoke();
   client.say(channel, `${data}`)
 }
-
-
-
 
 // Called every time the bot connects to Twitch chat
 function onConnectedHandler (addr, port) {
