@@ -27,7 +27,6 @@ const client = new tmi.client(opts);
 let loopInterval
 client.on('chat', (channel, userstate, message, self) => {
   if (self) return
-  console.log(userstate.username)
   client.whisper(userstate.username, 'hello').then(function(data) {
     console.log('data', data);
   }).catch(function(err) {
@@ -78,7 +77,6 @@ const usersOnChat = [ "commanderroot", "anotherttvviewer", "wizebot", "moobot"];
 // Called every time a message comes in
 function onMessageHandler(target, context, msg, self){
   const pseudo = context['display-name'];
-console.log(self)
     if(self){return;} // Ignore messages from the bot
     //Remove whitespaces from message
     const commandName = msg.trim();
@@ -108,12 +106,10 @@ console.log(self)
 
 async function onLiveMessageToUser(channel, username){
 const live = await getLiveInformationUser();
-client.say(channel, `Bonjour ${username} ! :)`);
     //privateMessageBot(username);
   if(live && live.type === 'live' && !usersOnChat.includes(username)){
     usersOnChat.push(username)
     client.say(channel, `Bonjour ${username} ! :)`);
-
   }else if(!live){
     usersOnChat.splice(4, usersOnChat.length)
   } 
