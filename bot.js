@@ -55,7 +55,6 @@ client.on('connected', onConnectedHandler);
 client.on("join", (channel, username, self) => {
   if(self){return;} // Ignore messages from the bot
   onLiveMessageToUser(channel, username);
-  
 });
 
 
@@ -78,7 +77,6 @@ const usersOnChat = [ "commanderroot", "anotherttvviewer", "wizebot", "moobot"];
 // Called every time a message comes in
 function onMessageHandler(target, context, msg, self){
   const pseudo = context['display-name'];
-console.log(self)
     if(self){return;} // Ignore messages from the bot
     //Remove whitespaces from message
     const commandName = msg.trim();
@@ -105,15 +103,20 @@ console.log(self)
   .then(res => res.json())
   .then(data =>data.data[0]);
 }
-
+async function onLive(){
+  const live = await getLiveInformationUser();
+  if(live && live.type === 'live'){
+    return true;
+  }else if (!live){
+    return false;
+  }
+}
 async function onLiveMessageToUser(channel, username){
-const live = await getLiveInformationUser();
-client.say(channel, `Bonjour ${username} ! :)`);
-    //privateMessageBot(username);
-  if(live && live.type === 'live' && !usersOnChat.includes(username)){
+const live = await onLive();
+    console.log(live)
+  if(live && !usersOnChat.includes(username)){
     usersOnChat.push(username)
     client.say(channel, `Bonjour ${username} ! :)`);
-
   }else if(!live){
     usersOnChat.splice(4, usersOnChat.length)
   } 
