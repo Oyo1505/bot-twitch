@@ -22,6 +22,8 @@ const opts = {
 
 // Create a client with our options
 const client = new tmi.client(opts);
+// Connect to Twitch:
+client.connect();
 
 //timed message
 let loopInterval
@@ -57,10 +59,6 @@ client.on("join", (channel, username, self) => {
   onLiveMessageToUser(channel, username);
 });
 
-
-// Connect to Twitch:
-client.connect();
-
 const commandList= [
   ['!rules', `Respectez-vous, soyez polis, pas de racisme... Bref, t'as compris. Aimez-vous les uns les autres BORDEL !!!` ],
   ['!insta','Le voilà : https://www.instagram.com/oyo1505/ Abonne toi :)'],
@@ -72,7 +70,7 @@ const commandList= [
   ['!pif']
 ];
 
-const usersOnChat = [ "commanderroot", "anotherttvviewer", "wizebot", "moobot"];
+const usersOnChat = [ "oyo1505", "commanderroot", "anotherttvviewer", "wizebot", "moobot"];
 
 // Called every time a message comes in
 function onMessageHandler(target, context, msg, self){
@@ -91,6 +89,8 @@ function onMessageHandler(target, context, msg, self){
   }
 //id oyo1505 = 55468567
 //id soiaok = 516281655
+//id 0y0_bot = 585157263
+
 //check live status user 
  async function getLiveInformationUser(){
   var url = 'https://api.twitch.tv/helix/streams?user_login=oyo1505';
@@ -113,7 +113,6 @@ async function onLive(){
 }
 async function onLiveMessageToUser(channel, username){
 const live = await onLive();
-    console.log(live)
   if(live && !usersOnChat.includes(username)){
     usersOnChat.push(username)
     client.say(channel, `Bonjour ${username} ! :)`);
@@ -131,10 +130,11 @@ async function getLastFollower(){
      } 
     })
 .then(res => res.json())
-.then(data => data);
+.then(data => data.data[0]);
 }
 
-
+var userFollowers= [];
+let notifFollow = false;
 async function getFollowers(){
   var url= 'https://api.twitch.tv/helix/users/follows?to_id=55468567';
   return await fetch(url, {
@@ -144,17 +144,24 @@ async function getFollowers(){
      } 
     })
 .then(res => res.json())
-.then(data => data.data);
+.then(data =>{ userFollowers=data.data});
 }
-
+getFollowers()
 
 setInterval(()=> newFollowerNotif(), 10000);
 async function newFollowerNotif(){
-  const lastFollower = await getLastFollower();
-  const userFollowers = await getFollowers();
-  userFollowers.map(follower => follower.from_id === lastFollower.data[0].from_id) ? clearInterval(): client.say(channel, `Bienvenue à ${lastFollower.data[0].from_name}, tu as très bon goût sache le`);
+  let lastFollower = await getLastFollower();
+  let m = userFollowers.some(item => item.from_id === lastFollower.from_id)
+  if(!m && !notifFollow){
+    client.say("#oyo1505", `Bienvenue à ${lastFollower.from_name} merci de suivre la chaîne, tu as très bon goût sache le ! :)`);
+    await getFollowers();
+    notifFollow = true;
+  }else if (m){
+    notifFollow = false;
+  }
+  clearInterval();
 }
-
+//client.say(channel, `Bienvenue à ${lastFollower.data[0].from_name}, tu as très bon goût sache le`)
 async function getJoke(){
    return  fetch('https://www.blagues-api.fr/api/random', {
         headers: {
