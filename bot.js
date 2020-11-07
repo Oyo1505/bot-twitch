@@ -146,7 +146,6 @@ async function getFollowers(){
 .then(res => res.json())
 .then(data =>{ userFollowers=data.data});
 }
-getFollowers()
 
 setInterval(()=> newFollowerNotif(), 10000);
 async function newFollowerNotif(){
