@@ -29,12 +29,6 @@ client.connect();
 let loopInterval
 client.on('chat', (channel, userstate, message, self) => {
   if (self) return
-  console.log(userstate.username)
-  client.whisper(userstate.username, 'hello').then(function(data) {
-    console.log('data', data);
-  }).catch(function(err) {
-    console.log('something went wrong', err);
-  });
   const msg = message.split(' ')
 
   if (msg[0].toLowerCase() === '!loop') {
