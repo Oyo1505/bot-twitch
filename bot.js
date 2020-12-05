@@ -87,7 +87,7 @@ function onMessageHandler(target, context, msg, self){
 
 //check live status user 
  async function getLiveInformationUser(){
-  var url = 'https://api.twitch.tv/helix/streams?user_login=oyo1505';
+  var url = 'https://api.twitch.tv/helix/streams?user_login=soiaok';
  return fetch(url, {
       headers: {
         'client-id' : process.env.CLIENT_ID,
@@ -95,10 +95,11 @@ function onMessageHandler(target, context, msg, self){
        } 
       })
   .then(res => res.json())
-  .then(data =>data.data[0]);
+  .then(data => console.log(data));
 }
 async function onLive(){
   const live = await getLiveInformationUser();
+ 
   if(live && live.type === 'live'){
     return true;
   }else if (!live){
@@ -120,7 +121,7 @@ async function getLastFollower(){
   return await fetch(url, {
     headers: {
       'client-id' : process.env.CLIENT_ID,
-      'Authorization' :`Bearer ${process.env.TWITCH_OAUTH_TOKEN}`
+      'Authorization' :`Bearer   ${process.env.TWITCH_OAUTH_TOKEN}`
      } 
     })
 .then(res => res.json())
@@ -141,12 +142,12 @@ async function getFollowers(){
 .then(data =>{ userFollowers=data.data});
 }
 
-setInterval(()=> newFollowerNotif(), 10000);
+//setInterval(()=> newFollowerNotif(), 10000);
 async function newFollowerNotif(){
   let lastFollower = await getLastFollower();
   let m = userFollowers.some(item => item.from_id === lastFollower.from_id)
   if(!m && !notifFollow){
-    client.say("#oyo1505", `Bienvenue à ${lastFollower.from_name} merci de suivre la chaîne, tu as très bon goût sache le ! :)`);
+    client.say("#oyo1505", `Bienvenue à @${lastFollower.from_name} merci de suivre la chaîne, tu as très bon goût sache le ! :)`);
     await getFollowers();
     notifFollow = true;
   }else if (m){
