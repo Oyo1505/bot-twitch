@@ -95,7 +95,7 @@ function onMessageHandler(target, context, msg, self){
        } 
       })
   .then(res => res.json())
-  .then(data => console.log(data));
+  .then(data => data);
 }
 async function onLive(){
   const live = await getLiveInformationUser();
