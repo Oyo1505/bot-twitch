@@ -87,7 +87,7 @@ function onMessageHandler(target, context, msg, self){
 
 //check live status user 
  async function getLiveInformationUser(){
-  var url = 'https://api.twitch.tv/helix/streams?user_login=soiaok';
+  var url = 'https://api.twitch.tv/helix/streams?user_login=oyo1505';
  return fetch(url, {
       headers: {
         'client-id' : process.env.CLIENT_ID,
@@ -142,7 +142,7 @@ async function getFollowers(){
 .then(data =>{ userFollowers=data.data});
 }
 
-//setInterval(()=> newFollowerNotif(), 10000);
+setInterval(()=> newFollowerNotif(), 10000);
 async function newFollowerNotif(){
   let lastFollower = await getLastFollower();
   let m = userFollowers.some(item => item.from_id === lastFollower.from_id)
@@ -155,7 +155,7 @@ async function newFollowerNotif(){
   }
   clearInterval();
 }
-//client.say(channel, `Bienvenue à ${lastFollower.data[0].from_name}, tu as très bon goût sache le`)
+
 async function getJoke(){
    return  fetch('https://www.blagues-api.fr/api/random', {
         headers: {
