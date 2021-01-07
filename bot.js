@@ -3,11 +3,14 @@ const tmi = require('tmi.js');
 const fetch = require('node-fetch');
 require('dotenv').config()
 let bot = require('./BotFighter');
+let {warrior, priest, mage, warlock, hunter} = require('./Characters');
 
 //init botFighter
 let  Bot = bot.BotFighter
 const botFighter = new Bot();
-
+let Warlock = warlock.Warlock;
+let warlockChara = new Warlock();
+console.log(warlockChara)
 // Define configuration options
 const opts = {
     identity: {
@@ -142,7 +145,7 @@ async function getFollowers(){
 .then(data =>{ userFollowers=data.data});
 }
 
-setInterval(()=> newFollowerNotif(), 10000);
+//setInterval(()=> newFollowerNotif(), 10000);
 async function newFollowerNotif(){
   let lastFollower = await getLastFollower();
   let m = userFollowers.some(item => item.from_id === lastFollower.from_id)
