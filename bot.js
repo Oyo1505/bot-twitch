@@ -9,8 +9,11 @@ let {Warrior, priest, mage, warlock, hunter} = require('./Characters');
 let  Bot = bot.BotFighter
 const botFighter = new Bot();
 
-let warChara = new Warrior("bob");
-console.log(warChara.getRandomNumber(0, 500))
+let warChara = new Warrior();
+warChara.name = "lol"
+warChara.hit();
+warChara.setLife();
+console.log(warChara.life)
 // Define configuration options
 const opts = {
     identity: {
@@ -33,9 +36,7 @@ let loopInterval
 client.on('chat', (channel, userstate, message, self) => {
   if (self) return
   const msg = message.split(' ')
-
   if (msg[0].toLowerCase() === '!loop') {
-
     if (loopInterval) { // Check if set
       console.log('stop !loop')
       clearInterval(loopInterval) // delete Timer
