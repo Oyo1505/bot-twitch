@@ -1,4 +1,9 @@
- function Character (name){
+getRandomNumber = (min, max) =>{
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min +1)) + min;
+}
+ /*function Chara (name){
   this.name=name
 }
 Character.prototype = {
@@ -17,34 +22,59 @@ Character.prototype = {
          return this.getRandomNumber(400, 500);
   },
   
+}   */
+class Character {
+ constructor(name){
+   this.name = name,
+   this.life = getRandomNumber(400, 600),
+   this.isTaken = false,
+   this.hit = getRandomNumber(40, 60),
+   this.shield = 0
+ }
+}
+class Warrior extends Character{
+  constructor(name){
+    super(name)
+  }
 }
 
-function Warrior(name){
-  this.name=name
-}
-Warrior.prototype = Object.create(Character.prototype);
-Warrior.prototype.constructor = Warrior;
-Warrior.prototype.hit = () =>{
-  console.log('BIM -59Degats');
-}
-Warrior.prototype.setLife = () =>{
-  Warrior.prototype.life = Warrior.prototype.getRandomNumber(400,500);
-};
-//Warrior.prototype = new Character();
 class Mage extends Character{
+  constructor(name){
+    super(name)
+  }
 
+   aire = () => {
+    console.log(this.name)
+  }
+  buff =()=>{
+
+  }
+ 
 }
 
 class Priest extends Character{
-    
+  constructor(name){
+    super(name)
+  }
+  heal = ()=> {
+    console.log("Healed")
+  }
 }
 
 class Hunter extends Character{
-    
+  constructor(name){
+    super(name)
+  }
+  dogAttack= ()=>{
+    console.log("dogAttack");
+  }
 }
 
 class Warlock extends Character{
-    
+  constructor(name){
+    super(name)
+  }
+  
 }
 
 module.exports = {
