@@ -1,18 +1,16 @@
 
-const tmi = require('tmi.js');
-const fetch = require('node-fetch');
-require('dotenv').config()
-let bot = require('./BotFighter');
-let {Warrior, priest, Mage, warlock, hunter} = require('./Characters');
+import tmi  from 'tmi.js';
+import fetch from 'node-fetch';
+import BotFighter  from './BotFighter.js';
+import {Warrior, Priest, Mage, Warlock, Hunter} from './Characters.js';
 
-//init botFighter
-let  Bot = bot.BotFighter
+//init botFighter and Charaters
+let  Bot = BotFighter
 const botFighter = new Bot();
-let magaChara = new Mage('toto');
-magaChara.aire();
 let warChara = new Warrior("Joken");
+let mageChara = new Mage("0y0");
 
-console.log(magaChara.life, "mage", warChara.name, "warrior");
+console.log(mageChara.life, warChara.name, "warrior");
 // Define configuration options
 const opts = {
     identity: {

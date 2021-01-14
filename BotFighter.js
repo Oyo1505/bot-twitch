@@ -1,4 +1,4 @@
-const tmi = require('tmi.js');
+import tmi  from 'tmi.js';
 // Create a client with our options
 const opts = {
   identity: {
@@ -50,6 +50,7 @@ client.connect();
            }
         }
       }
- module.exports = {
+export default BotFighter;
+ /*module.exports = {
      BotFighter : BotFighter
- }
+ }*/

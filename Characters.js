@@ -1,28 +1,5 @@
-getRandomNumber = (min, max) =>{
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min +1)) + min;
-}
- /*function Chara (name){
-  this.name=name
-}
-Character.prototype = {
-  constructor: Character,
-  attack : 0,
-  shield :0,
-  isTaken : false,
-  nameViewer : '',
-  life : 0,
-  getRandomNumber : function (min, max){
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min +1)) + min;
-  },
-  setLife : function(){
-         return this.getRandomNumber(400, 500);
-  },
-  
-}   */
+import getRandomNumber  from './utils/utils.js'
+
 class Character {
  constructor(name){
    this.name = name,
@@ -76,11 +53,11 @@ class Warlock extends Character{
   }
   
 }
-
-module.exports = {
+export  { Mage, Warrior, Hunter, Priest, Warlock};
+/*module.exports = {
     Warrior : Warrior,
     Warlock : Warlock,
     Hunter : Hunter,
     Mage : Mage,
-    Priest: Priest
-}
+    Piest: Priest
+}*/
