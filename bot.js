@@ -7,9 +7,11 @@ import {Warrior, Priest, Mage, Warlock, Hunter} from './Characters.js';
 //init botFighter and Charaters
 let  Bot = BotFighter
 const botFighter = new Bot();
-let warChara = new Warrior("Joken");
-let mageChara = new Mage("0y0");
-
+let warChara = new Warrior();
+let mageChara = new Mage();
+let warlockChara = new Warlock();
+let priestChara = new Priest();
+let hunterChara = new Hunter();
 console.log(mageChara.hit, warChara.hit, "warrior");
 // Define configuration options
 const opts = {
@@ -70,25 +72,33 @@ const commandFightList = [
   ['!fight'],
   ['!paf'],
   ['!pif'],
-  ['!mage'],
-  ['!warlock'],
-  ['!warrior'],
-  ['!hunter'],
-  ['!priest'],
   ['!hit'],
   ['!stun'],
   ['!heal']
   ['!curse'],
   ['!dog'],
   ['!buff'],
-  
+]
+const commandChooseCharacter = [
+  ['!mage'],
+  ['!warlock'],
+  ['!warrior'],
+  ['!hunter'],
+  ['!priest'],
 ]
 function onFightHandler(target, context, msg, self) {
   const pseudo = context['display-name'];
   if(self){return;} // Ignore messages from the bot
   //Remove whitespaces from message
   let commandFightName = msg.trim();
-  console.log(commandFightName)
+  let command = commandChooseCharacter.filter(command => command[0] === commandFightName);
+  console.log(command);
+  command[0] && command[0][0] && command[0][0] === "!mage" ? mageChara.init(pseudo)  : 
+  (command[0] && command[0][0] && command[0][0]=== "!warrior" ? warChara.init(pseudo) :
+  (command[0] && command[0][0] && command[0][0]=== "!warlock" ? warlockChara.init(pseudo) :
+  (command[0] && command[0][0] && command[0][0]=== "!hunter" ? hunterChara.init(pseudo) :
+  (command[0] && command[0][0] && command[0][0]=== "!priest" ? priestChara.init(pseudo) :
+   console.log("Unknow command")))));
 }
 // Called every time a message comes in
 function onMessageHandler(target, context, msg, self){

@@ -23,6 +23,16 @@ class Character {
    this.hit = getRandomNumber(40, 60),
    this.buffed = false
  }
+
+ init = (name)=>{
+   if(this.isTaken){
+    client.say("oyo1505", `Désolé c'est déjà pris par ${this.name}`);
+     return
+   }
+  this.name = name;
+  this.isTaken = true;
+ }
+
 }
 class Warrior extends Character{
   constructor(name){
