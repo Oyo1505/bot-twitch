@@ -10,7 +10,7 @@ const botFighter = new Bot();
 let warChara = new Warrior("Joken");
 let mageChara = new Mage("0y0");
 
-console.log(mageChara.life, warChara.name, "warrior");
+console.log(mageChara.hit, warChara.hit, "warrior");
 // Define configuration options
 const opts = {
     identity: {
@@ -48,6 +48,7 @@ client.on('chat', (channel, userstate, message, self) => {
 });
 // Register our event handlers (defined below)
 client.on('message', onMessageHandler);
+client.on('message', onFightHandler);
 client.on('connected', onConnectedHandler);
 client.on("join", (channel, username, self) => {
   if(self){return;} // Ignore messages from the bot
@@ -60,13 +61,35 @@ const commandList= [
   ['!twitter','Tiens mon profil twitter https://twitter.com/Oyo1505 ;)'],
   ['!follow', 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️'],
   ['!joke'],
-  ['!fight'],
-  ['!paf'],
-  ['!pif']
+
 ];
 
 const usersOnChat = [ "oyo1505", "commanderroot", "anotherttvviewer", "wizebot", "moobot"];
 
+const commandFightList = [ 
+  ['!fight'],
+  ['!paf'],
+  ['!pif'],
+  ['!mage'],
+  ['!warlock'],
+  ['!warrior'],
+  ['!hunter'],
+  ['!priest'],
+  ['!hit'],
+  ['!stun'],
+  ['!heal']
+  ['!curse'],
+  ['!dog'],
+  ['!buff'],
+  
+]
+function onFightHandler(target, context, msg, self) {
+  const pseudo = context['display-name'];
+  if(self){return;} // Ignore messages from the bot
+  //Remove whitespaces from message
+  let commandFightName = msg.trim();
+  console.log(commandFightName)
+}
 // Called every time a message comes in
 function onMessageHandler(target, context, msg, self){
   const pseudo = context['display-name'];
