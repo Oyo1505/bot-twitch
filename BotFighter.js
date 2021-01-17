@@ -1,4 +1,5 @@
 import tmi  from 'tmi.js';
+import {getRandomNumber}  from './utils/utils.js'
 // Create a client with our options
 const opts = {
   identity: {
@@ -16,17 +17,20 @@ client.connect();
  class BotFighter {
         constructor(){
           this.life = 0;
-          this.fightEngaged = false
+          this.fightEngaged = false;
+          this.stunned = false;
         }
          setLife(){
           this.life = 500;
         }
         takeHit(){
-          return this.life = this.life - this.getRandomHit() 
-        
+          return this.life = this.life - getRandomNumber(50, 100); 
         }
-        getRandomHit(){
-          return Math.floor(Math.random() * (100 - 50 +1)) + 50;
+        attackPlayers(players){
+          if(!this.stunned){
+            players.map(player => player.life = player.life - getRandomNumber(50, 75));
+            setInterval(this.attackPlayers(),6000)
+          }
         }
          startFight(channel){
           this.setLife()

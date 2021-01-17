@@ -1,4 +1,4 @@
-import getRandomNumber  from './utils/utils.js'
+import {getRandomNumber, coolDownSpell}  from './utils/utils.js'
 import tmi  from 'tmi.js';
 // Create a client with our options
 const opts = {
@@ -50,15 +50,19 @@ class Mage extends Character{
   buffPlayer=(player)=>{
     
   }
- 
 }
 
 class Priest extends Character{
   constructor(name){
     super(name)
+    this.hasBeenSpelled = false
   }
-  healPlayer = (player)=> {
-   return player.life  + getRandomNumber(50, 75);
+  healPlayers = (players)=> {
+    if(!this.hasBeenSpelled){
+      players.map(player => player.life = player.life + getRandomNumber(50, 75));
+      setTimeout(()=>{this.hasBeenSpelled = false },6000)
+    }
+    this.hasBeenSpelled = true;
   }
 }
 
