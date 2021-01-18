@@ -68,7 +68,9 @@ const commandList= [
   ['!twitter','Tiens mon profil twitter https://twitter.com/Oyo1505 ;)'],
   ['!follow', 'Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️'],
   ['!joke'],
-
+  ['!fight'],
+  ['!paf'],
+  ['!pif'],
 ];
 // Called every time a message comes in
 function onMessageHandler(target, context, msg, self){
@@ -81,7 +83,7 @@ function onMessageHandler(target, context, msg, self){
    command[0] && command[0][1]  ? 
     client.say(target, `${command[0][1]}`)
    :(command[0] && command[0][0] && command[0][0] === "!joke" ? runJoke(target) 
-   :(command[0] && command[0][0] && command[0][0] === "!fight" ? botFighter.startFight(target)
+   :(command[0] && command[0][0] && command[0][0] === "!fight" ? botFighter.startFight(target, characters)
    :(command[0] && command[0][0] &&  command[0][0] === "!pif" || command[0] && command[0][0] && command[0][0] === "!paf"? botFighter.onFight(target, pseudo)
    :console.log('Unknown command'))));
   }
@@ -105,7 +107,7 @@ function warriorCommand(target, context, msg, self){
   //Remove whitespaces from message
   let messageTrim = msg.trim();
   let command = commandStun.filter(command => command[0] === messageTrim);
-  command[0] && command[0][0] && command[0][0] === "!stun" ? botFighter.stunned = true  : console.log('Unknown command');
+  command[0] && command[0][0] && command[0][0] === "!stun" ? warChara.stunEnemy(botFighter) : console.log('Unknown command');
 };
 
 //Priest Commands
@@ -117,13 +119,17 @@ function priestCommand(target, context, msg, self){
   let command = commandHeal.filter(command => command[0] === messageTrim);
   command[0] && command[0][0] && command[0][0] === "!heal" ? priestChara.healPlayers(characters)  : console.log('Unknown command');
 };
+
 //Warlock Commands
 function warlockCommand(target, context, msg, self){
-  let warlockCommand = '!stun';
+  let warlockCommand = [['!curse']];
   if(self){return;} // Ignore messages from the bot
   //Remove whitespaces from message
-  let commandTrim = msg.trim();
+  let messageTrim = msg.trim();
+  let command = warlockCommand.filter(command => command[0] === messageTrim);
+  command[0] && command[0][0] && command[0][0] === "!curse"  ? warlockChara.curseEnemy(botFighter)  : console.log('Unknown command');
 };
+
 //Mage Commands
 function mageCommand(target, context, msg, self){
   let command = '!stun';
@@ -131,12 +137,15 @@ function mageCommand(target, context, msg, self){
   //Remove whitespaces from message
   let commandTrim = msg.trim();
 };
+
 //Hunter Commands
 function hunterCommand(target, context, msg, self){
-  let commandHunter = '!stun';
+  let commandHunter = [['!dog']];
   if(self){return;} // Ignore messages from the bot
   //Remove whitespaces from message
-  let commandTrim = msg.trim();
+  let messageTrim = msg.trim();
+  let command = commandHunter.filter(command => command[0] === messageTrim);
+  command[0] && command[0][0] && command[0][0] === "!dog" ? hunterChara.dogAttack(botFighter)  : console.log('Unknown command');
 };
 
 
@@ -153,13 +162,13 @@ function onFightHandler(target, context, msg, self) {
   //Remove whitespaces from message
   let commandFightName = msg.trim();
   let command = commandChooseCharacter.filter(command => command[0] === commandFightName);
-
-  command[0] && command[0][0] && command[0][0] === "!mage" ? mageChara.init(pseudo)  : 
-  (command[0] && command[0][0] && command[0][0]=== "!warrior" ? warChara.init(pseudo) :
-  (command[0] && command[0][0] && command[0][0]=== "!warlock" ? warlockChara.init(pseudo) :
-  (command[0] && command[0][0] && command[0][0]=== "!hunter" ? hunterChara.init(pseudo) :
-  (command[0] && command[0][0] && command[0][0]=== "!priest" ? priestChara.init(pseudo) :
+  command[0] && command[0][0] && command[0][0] === "!mage" && botFighter.fightEngaged === true ? mageChara.init(pseudo, "mage")  : 
+  (command[0] && command[0][0] && command[0][0]=== "!warrior"&& botFighter.fightEngaged === true ? warChara.init(pseudo, "warrior") :
+  (command[0] && command[0][0] && command[0][0] === "!warlock" && botFighter.fightEngaged === true ? warlockChara.init(pseudo, "warlock") :
+  (command[0] && command[0][0] && command[0][0]=== "!hunter" && botFighter.fightEngaged === true ? hunterChara.init(pseudo, "hunter") :
+  (command[0] && command[0][0] && command[0][0]=== "!priest" && botFighter.fightEngaged === true ? priestChara.init(pseudo, "priest") :
    console.log("Unknown command")))));
+   console.log(mageChara);
 }
 
 //id oyo1505 = 55468567

@@ -18,7 +18,8 @@ client.connect();
         constructor(){
           this.life = 0;
           this.fightEngaged = false;
-          this.stunned = false;
+          this.isStunned = false;
+          this.isCursed = false;
         }
          setLife(){
           this.life = 500;
@@ -27,23 +28,31 @@ client.connect();
           return this.life = this.life - getRandomNumber(50, 100); 
         }
         attackPlayers(players){
-          if(!this.stunned){
-            players.map(player => player.life = player.life - getRandomNumber(50, 75));
-            setInterval(this.attackPlayers(),6000)
+          if(!this.isStunned){
+            players.map(player =>{
+              if(player.playerEliminated() && player.isTaken){
+                player.life = player.life - getRandomNumber(50, 75)
+              }else{
+                console.log(`${player.name} mort`)
+              };
+            });
           }
         }
-         startFight(channel){
+         startFight(channel, players){
           this.setLife()
+          client.say(channel, "Pour choisir votre classe : !mage, !warrior, !warlock, !priest, !hunter");
           if(!this.fightEngaged){
-          client.say(channel, "FIIIGHT !!!!!!!!!!!!!!!!!!!!");
-          client.say(channel, `J'ai ${this.life} point de vie! Essayer de me battre petits cloportes`);
-          this.fightEngaged = !this.fightEngaged;
+          
+           client.say(channel, `J'ai ${this.life} point de vie! Essayer de me battre petits cloportes`);
+           this.attackPlayers(players)
+           //   setInterval(()=>{this.attackPlayers(players)},3000);
+           this.fightEngaged = !this.fightEngaged;
           }
         } 
-         onFight(channel, user) {
+         onFight(channel, username) {
            const life =  this.takeHit();
            if(life <= 0 && this.fightEngaged){     
-            client.say(channel, `Bien... ${user} Vous m'avez battu...`);
+            client.say(channel, `Bien... ${username} Vous m'avez battu...`);
             this.fightEngaged = false;
              return;
            }else if(this.fightEngaged === false){
