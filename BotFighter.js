@@ -25,7 +25,12 @@ client.connect();
           this.life = 500;
         }
         takeHit(){
-          return this.life = this.life - getRandomNumber(50, 100); 
+          if(this.isCursed){
+            return this.life = this.life - getRandomNumber(70, 120);   
+          }else{
+            return this.life = this.life - getRandomNumber(50, 100);
+          }
+           
         }
         attackPlayers(players){
           if(!this.isStunned){
@@ -49,9 +54,13 @@ client.connect();
            this.fightEngaged = !this.fightEngaged;
           }
         } 
-         onFight(channel, username) {
+        findUsernameInArray  (players, username){
+         console.log( players.map(player => player.hasOwnProperty(username)));
+        }
+         onFight(channel, players, username) {
+           this.findUsernameInArray(players, username)
            const life =  this.takeHit();
-           if(life <= 0 && this.fightEngaged){     
+           if(life <= 0 && this.fightEngaged && players.include(username)){     
             client.say(channel, `Bien... ${username} Vous m'avez battu...`);
             this.fightEngaged = false;
              return;

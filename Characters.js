@@ -35,6 +35,7 @@ class Character {
   this.name = name;
   this.className = className;
   this.isTaken = true;
+  client.say('oyo1505', `${this.name} à choisi la classe ${this.className}`)
  }
 
  playerEliminated(){
@@ -71,8 +72,15 @@ class Mage extends Character{
   constructor(name){
     super(name)
   }
-  buffPlayer=(player)=>{
-    
+  freezeEnemy = (bot) =>{
+    if(this.isTaken && !this.stunned){
+      bot.isStunned = true;
+      client.say("oyo1505", `*JE PEUX PLUS BOUGER !!!*`);
+      setTimeout(()=>{ bot.isStunned = false },30000);
+      setTimeout(()=>{ this.stunned = false },45000);
+    }else{
+      client.say("oyo1505", `Hé hé hé. Ton stun ne me fait rien`);
+    }
   }
 }
 
@@ -121,22 +129,15 @@ class Warlock extends Character{
     this.cursed = false
   }
   curseEnemy=(bot)=>{
-    if(!this.isCursed && this.isTaken === true){
-      bot.cursed = true;
-      setTimeout(()=>{bot.isCursed = false, 15000});
+    if(!bot.isCursed && this.isTaken === true){
+      setTimeout(()=>{bot.isCursed = false}, 15000);
       client.say("oyo1505", ` AAAHH!! Je sens mes forces partir.`);    
-      setTimeout(()=>{this.cursed = false, 45000});
+      setTimeout(()=>{this.cursed = false}, 45000);
     }else{
       client.say("oyo1505", ` Misérable petit ${this.name} de pacotille, ta malédiction n'est pas disponible`);   
     }
-    this.isCursed = true;
+    bot.isCursed = true;
+    this.cursed = true;
   }
 }
 export  { Mage, Warrior, Hunter, Priest, Warlock};
-/*module.exports = {
-    Warrior : Warrior,
-    Warlock : Warlock,
-    Hunter : Hunter,
-    Mage : Mage,
-    Piest: Priest
-}*/
