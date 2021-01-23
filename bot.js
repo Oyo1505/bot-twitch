@@ -95,7 +95,7 @@ function warriorCommand(target, context, msg, self){
   //Remove whitespaces from message
   let messageTrim = msg.trim();
   let command = commandStun.filter(command => command[0] === messageTrim);
-  command[0] && command[0][0] && command[0][0] === "!stun" ? warChara.stunEnemy(botFighter) : console.log('Unknown command');
+  command[0] && command[0][0] && command[0][0] === "!stun" ? warChara.stunEnemy(botFighter) : '';
 };
 
 //Priest Commands
@@ -135,7 +135,7 @@ function hunterCommand(target, context, msg, self){
   //Remove whitespaces from message
   let messageTrim = msg.trim();
   let command = commandHunter.filter(command => command[0] === messageTrim);
-  command[0] && command[0][0] && command[0][0] === "!dog" ? hunterChara.dogAttack(botFighter)  : console.log('Unknown command');
+  command[0] && command[0][0] && command[0][0] === "!dog" ? hunterChara.dogAttack(botFighter)  : '';
 };
 
 
@@ -157,7 +157,7 @@ function onFightHandler(target, context, msg, self) {
   (command[0] && command[0][0] && command[0][0] === "!warlock" && botFighter.fightEngaged === true ? warlockChara.init(pseudo, "warlock") :
   (command[0] && command[0][0] && command[0][0]=== "!hunter" && botFighter.fightEngaged === true ? hunterChara.init(pseudo, "hunter") :
   (command[0] && command[0][0] && command[0][0]=== "!priest" && botFighter.fightEngaged === true ? priestChara.init(pseudo, "priest") :
-   console.log("Unknown command")))));
+   ''))));
 }
 
 //id oyo1505 = 55468567

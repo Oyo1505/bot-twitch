@@ -23,7 +23,6 @@ class Character {
    this.hit = getRandomNumber(40, 60),
    this.buffed = false,
    this.channel = '',
-   this.isDead = false,
    this.className = ''
  }
 
@@ -41,7 +40,7 @@ class Character {
  playerEliminated(){
   if(this.life <= 0 && this.isTaken){     
     client.say("oyo1505", `${this.name}, t'es mort ! Noob `);
-    this.isDead = true;
+    this.isTaken = false;
      return true;
    }else if(this.isTaken){
     client.say("oyo1505", `${this.name} vous reste ${this.life} de point de vie`)
@@ -140,4 +139,4 @@ class Warlock extends Character{
     this.cursed = true;
   }
 }
-export  { Mage, Warrior, Hunter, Priest, Warlock};
+export { Mage, Warrior, Hunter, Priest, Warlock};
