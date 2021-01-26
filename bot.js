@@ -1,4 +1,3 @@
-
 import tmi  from 'tmi.js';
 import fetch from 'node-fetch';
 import BotFighter  from './BotFighter.js';

@@ -32,25 +32,27 @@ client.connect();
           }
            
         }
+        findPlayersIsTaken(players){
+           return players.map(player=> player.isDead ? true : false)
+        }
         attackPlayers(players){
-          console.log(this.findPlayersIsTaken(players))
-          if(this.findPlayersIsTaken(players)){
-            console.log("test")
-              if(!this.isStunned){
-                players.map(player =>{
-                  if(!player.playerEliminated() && player.isTaken){
-                  return  player.life = player.life - getRandomNumber(50, 75);
-                  }
-                });
-              }
-            }else{
-              this.fightEngaged = false;
+           if(this.findPlayersIsTaken(players).includes(false) && this.fightEngaged){
+            if(!this.isStunned){
+              players.map(player =>{
+                if(!player.playerEliminated() && player.isTaken){
+                return  player.life = player.life - getRandomNumber(50, 75);
+                }
+              });
             }
+           }else{
+             console.log("test")
+             clearInterval();
+           }
           }
         
          startFight(channel, players){
           this.setLife()
-          client.say(channel, "Pour choisir votre classe : !mage, !warrior, !warlock, !priest, !hunter");
+          client.say(channel, "Pour choisir votre classe : !mage, !warrior, !warlock, !priest, !hunter. Le combar commence dans 30 secondes");
           if(!this.fightEngaged){
            client.say(channel, `J'ai ${this.life} point de vie! Essayer de me battre petits cloportes`);
            setInterval(()=>{this.attackPlayers(players)},5000);
@@ -58,36 +60,27 @@ client.connect();
           }
         } 
         findUsernameInArray(players, username){
-         players.map(player =>{
-           if(player.name===username){
-             return true;
-           }
-        });
-      }
-      findPlayersIsTaken(players){
-        players.map(player =>{
-          if(player.isTaken){
-            return true;
-          }
-       })
-      }
+          return players.map(player=> player.name === username ? true : false)
+       }
+       findPlayerNotDead(players,username){
+        return players.map(player=>player.name === username && player.isDead === false && player.isTaken === true ? true : false)
+       }
          onFight(channel, players, username) {  
-          if(this.findUsernameInArray(players, username)){        
-           const life =  this.takeHit();
-           if(life <= 0 && this.fightEngaged){     
-            client.say(channel, `Bien... ${username} Vous m'avez battu...`);
-            this.fightEngaged = false;
-             return;
-           }else if(this.fightEngaged === false){
-            client.say(channel, "Je ne suis plus en combat petit cloporte")
-            return;
-           }else{
-            client.say(channel, `Il me reste ${this.life} de point de vie`)
-           }
+           let playersNotDead = this.findPlayerNotDead(players, username).includes(true);
+          if(playersNotDead){        
+            const life =  this.takeHit();
+            if(life <= 0 && this.fightEngaged){     
+              client.say(channel, `Bien... ${username} Vous m'avez battu...`);
+              this.fightEngaged = false;
+              return;
+            }else if(this.fightEngaged === false){
+              client.say(channel, "Je ne suis plus en combat petit cloporte")
+              return;
+            }else{
+              client.say(channel, `Il me reste ${this.life} de point de vie`)
+            }
           }
+          
         }
       }
 export default BotFighter;
- /*module.exports = {
-     BotFighter : BotFighter
- }*/

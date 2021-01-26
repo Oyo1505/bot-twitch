@@ -23,7 +23,8 @@ class Character {
    this.hit = getRandomNumber(40, 60),
    this.buffed = false,
    this.channel = '',
-   this.className = ''
+   this.className = '',
+   this.isDead = false
  }
 
  init = (name, className)=>{
@@ -38,12 +39,12 @@ class Character {
  }
 
  playerEliminated(){
-  if(this.life <= 0 && this.isTaken){     
+  if(this.life <= 0 && this.isTaken && !this.isDead){     
     client.say("oyo1505", `${this.name}, t'es mort ! Noob `);
-    this.isTaken = false;
+    this.isDead = true;
      return true;
-   }else if(this.isTaken){
-    client.say("oyo1505", `${this.name} vous reste ${this.life} de point de vie`)
+   }else if(this.isTaken && this.life > 0){
+    client.say("oyo1505", `${this.name}  avec la classe ${this.className} vous reste ${this.life} de point de vie`)
     return false;
    }
  }
