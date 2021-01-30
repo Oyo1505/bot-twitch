@@ -18,13 +18,13 @@ client.connect();
 class Character {
  constructor(name){
    this.name = name,
-   this.life = getRandomNumber(400, 600),
+   this.life = 0,
    this.isTaken = false,
    this.hit = getRandomNumber(40, 60),
    this.buffed = false,
    this.channel = '',
    this.className = '',
-   this.isDead = false
+   this.isDead = true
  }
 
  init = (name, className)=>{
@@ -32,9 +32,11 @@ class Character {
     client.say("oyo1505", `Désolé c'est déjà pris par ${this.name}`);
      return;
    }
+  this.life = getRandomNumber(400, 600);
   this.name = name;
   this.className = className;
   this.isTaken = true;
+  this.isDead = false;
   client.say('oyo1505', `${this.name} à choisi la classe ${this.className}`)
  }
 

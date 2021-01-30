@@ -11,6 +11,7 @@ const opts = {
       'soiaok'
     ]
 };
+var attackInterval;
 const client = new tmi.client(opts);
 // Connect to Twitch:
 client.connect();
@@ -36,17 +37,23 @@ client.connect();
            return players.map(player=> player.isDead ? true : false)
         }
         attackPlayers(players){
-           if(this.findPlayersIsTaken(players).includes(false) && this.fightEngaged){
+          var playersAlive = this.allPlayersAreDead(players).includes(false);
+          var playersTaken = this.findPlayersIsTaken(players).includes(false);
+          
+           if(playersAlive && playersTaken && this.fightEngaged){
             if(!this.isStunned){
               players.map(player =>{
                 if(!player.playerEliminated() && player.isTaken){
                 return  player.life = player.life - getRandomNumber(50, 75);
                 }
               });
+              return true;
             }
-           }else{
-             console.log("test")
-             clearInterval();
+           }else if(!playersAlive) {
+             this.fightEngaged = false;
+             this.makeAvaibleCharaterClass(players)
+             client.say("oyo1505", `Le combat est terminé, je vous ai battu... Vous êtes tres mauvais sachez le ! PJSalt PJSalt PJSalt `);
+             clearInterval(attackInterval)
            }
           }
         
@@ -55,13 +62,21 @@ client.connect();
           client.say(channel, "Pour choisir votre classe : !mage, !warrior, !warlock, !priest, !hunter. Le combar commence dans 30 secondes");
           if(!this.fightEngaged){
            client.say(channel, `J'ai ${this.life} point de vie! Essayer de me battre petits cloportes`);
-           setInterval(()=>{this.attackPlayers(players)},5000);
+           attackInterval = setInterval(()=>{this.attackPlayers(players)},5000);
            this.fightEngaged = !this.fightEngaged;
           }
         } 
+        makeAvaibleCharaterClass(players){
+          players.map(player => player.isTaken = false)
+        }
+        allPlayersAreDead(players){
+         return players.map(player => player.isDead ? true : false);
+        }
+
         findUsernameInArray(players, username){
           return players.map(player=> player.name === username ? true : false)
        }
+
        findPlayerNotDead(players,username){
         return players.map(player=>player.name === username && player.isDead === false && player.isTaken === true ? true : false)
        }
