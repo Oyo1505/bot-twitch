@@ -1,13 +1,17 @@
+import tmi  from 'tmi.js';
+import fetch from 'node-fetch';
+import BotFighter  from './BotFighter.js';
+import {Warrior, Priest, Mage, Warlock, Hunter} from './Characters.js';
 
-const tmi = require('tmi.js');
-const fetch = require('node-fetch');
-require('dotenv').config()
-let bot = require('./BotFighter');
-
-//init botFighter
-let  Bot = bot.BotFighter
-const botFighter = new Bot();
-
+//init botFighter and Charaters
+const  Bot = BotFighter
+var botFighter = new Bot();
+const warChara = new Warrior();
+const mageChara = new Mage();
+const warlockChara = new Warlock();
+const priestChara = new Priest();
+const hunterChara = new Hunter();
+const characters = [warChara, mageChara, warlockChara, priestChara, hunterChara]
 // Define configuration options
 const opts = {
     identity: {
@@ -30,9 +34,7 @@ let loopInterval
 client.on('chat', (channel, userstate, message, self) => {
   if (self) return
   const msg = message.split(' ')
-
   if (msg[0].toLowerCase() === '!loop') {
-
     if (loopInterval) { // Check if set
       console.log('stop !loop')
       clearInterval(loopInterval) // delete Timer
@@ -47,12 +49,18 @@ client.on('chat', (channel, userstate, message, self) => {
 });
 // Register our event handlers (defined below)
 client.on('message', onMessageHandler);
+client.on('message', onFightHandler);
+client.on('message', priestCommand);
+client.on('message', warriorCommand);
+client.on('message', warlockCommand);
+client.on('message', mageCommand);
+client.on('message', hunterCommand);
 client.on('connected', onConnectedHandler);
 client.on("join", (channel, username, self) => {
   if(self){return;} // Ignore messages from the bot
   onLiveMessageToUser(channel, username);
 });
-
+const usersOnChat = [ "oyo1505", "commanderroot", "anotherttvviewer", "wizebot", "moobot"];
 const commandList= [
   ['!rules', `Respectez-vous, soyez polis, pas de racisme... Bref, t'as compris. Aimez-vous les uns les autres BORDEL !!!` ],
   ['!insta','Le voilà : https://www.instagram.com/oyo1505/ Abonne toi :)'],
@@ -61,11 +69,8 @@ const commandList= [
   ['!joke'],
   ['!fight'],
   ['!paf'],
-  ['!pif']
+  ['!pif'],
 ];
-
-const usersOnChat = [ "oyo1505", "commanderroot", "anotherttvviewer", "wizebot", "moobot"];
-
 // Called every time a message comes in
 function onMessageHandler(target, context, msg, self){
   const pseudo = context['display-name'];
@@ -77,10 +82,83 @@ function onMessageHandler(target, context, msg, self){
    command[0] && command[0][1]  ? 
     client.say(target, `${command[0][1]}`)
    :(command[0] && command[0][0] && command[0][0] === "!joke" ? runJoke(target) 
-   :(command[0] && command[0][0] && command[0][0] === "!fight" ? botFighter.startFight(target)
-   :(command[0] && command[0][0] &&  command[0][0] === "!pif" || command[0] && command[0][0] && command[0][0] === "!paf"? botFighter.onFight(target, pseudo)
-   :console.log('Unknown command'))));
+   :(command[0] && command[0][0] && command[0][0] === "!fight" ? botFighter.startFight(target, characters)
+   :(command[0] && command[0][0] &&  command[0][0] === "!pif" || command[0] && command[0][0] && command[0][0] === "!paf"? botFighter.onFight(target, characters, pseudo)
+   :'')));
   }
+
+//Warrior Commands
+function warriorCommand(target, context, msg, self){
+  let commandStun = [['!stun']];
+  if(self){return;} // Ignore messages from the bot
+  //Remove whitespaces from message
+  let messageTrim = msg.trim();
+  let command = commandStun.filter(command => command[0] === messageTrim);
+  command[0] && command[0][0] && command[0][0] === "!stun" ? warChara.stunEnemy(botFighter) : '';
+};
+
+//Priest Commands
+function priestCommand(target, context, msg, self){
+  let commandHeal = [['!heal']];
+  if(self){return;} // Ignore messages from the bot
+  //Remove whitespaces from message
+  let messageTrim = msg.trim();
+  let command = commandHeal.filter(command => command[0] === messageTrim);
+  command[0] && command[0][0] && command[0][0] === "!heal" ? priestChara.healPlayers(characters)  : '';
+};
+
+//Warlock Commands
+function warlockCommand(target, context, msg, self){
+  let warlockCommand = [['!curse']];
+  if(self){return;} // Ignore messages from the bot
+  //Remove whitespaces from message
+  let messageTrim = msg.trim();
+  let command = warlockCommand.filter(command => command[0] === messageTrim);
+  command[0] && command[0][0] && command[0][0] === "!curse"  ? warlockChara.curseEnemy(botFighter)  : '';
+};
+
+//Mage Commands
+function mageCommand(target, context, msg, self){
+  let mageCommand = [['!freeze']];
+  if(self){return;} // Ignore messages from the bot
+  //Remove whitespaces from message
+  let messageTrim = msg.trim();
+  let command = mageCommand.filter(command => command[0] === messageTrim);
+  command[0] && command[0][0] && command[0][0] === "!freeze"  ? mageChara.freezeEnemy(botFighter)  : '';
+};
+
+//Hunter Commands
+function hunterCommand(target, context, msg, self){
+  let commandHunter = [['!dog']];
+  if(self){return;} // Ignore messages from the bot
+  //Remove whitespaces from message
+  let messageTrim = msg.trim();
+  let command = commandHunter.filter(command => command[0] === messageTrim);
+  command[0] && command[0][0] && command[0][0] === "!dog" ? hunterChara.dogAttack(botFighter)  : '';
+};
+
+
+const commandChooseCharacter = [
+  ['!mage'],
+  ['!warlock'],
+  ['!warrior'],
+  ['!hunter'],
+  ['!priest'],
+]
+function onFightHandler(target, context, msg, self) {
+  const pseudo = context['display-name'];
+  if(self){return;} // Ignore messages from the bot
+  //Remove whitespaces from message
+  let commandFightName = msg.trim();
+  let command = commandChooseCharacter.filter(command => command[0] === commandFightName);
+  command[0] && command[0][0] && command[0][0] === "!mage" && botFighter.fightEngaged === true ? mageChara.init(pseudo, "mage")  : 
+  (command[0] && command[0][0] && command[0][0]=== "!warrior"&& botFighter.fightEngaged === true ? warChara.init(pseudo, "warrior") :
+  (command[0] && command[0][0] && command[0][0] === "!warlock" && botFighter.fightEngaged === true ? warlockChara.init(pseudo, "warlock") :
+  (command[0] && command[0][0] && command[0][0]=== "!hunter" && botFighter.fightEngaged === true ? hunterChara.init(pseudo, "hunter") :
+  (command[0] && command[0][0] && command[0][0]=== "!priest" && botFighter.fightEngaged === true ? priestChara.init(pseudo, "priest") :
+   ''))));
+}
+
 //id oyo1505 = 55468567
 //id soiaok = 516281655
 //id 0y0_bot = 585157263
@@ -142,7 +220,7 @@ async function getFollowers(){
 .then(data =>{ userFollowers=data.data});
 }
 
-setInterval(()=> newFollowerNotif(), 10000);
+//setInterval(()=> newFollowerNotif(), 10000);
 async function newFollowerNotif(){
   let lastFollower = await getLastFollower();
   let m = userFollowers.some(item => item.from_id === lastFollower.from_id)
