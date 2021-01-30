@@ -62,7 +62,7 @@ client.connect();
           client.say(channel, "Pour choisir votre classe : !mage, !warrior, !warlock, !priest, !hunter. Le combar commence dans 30 secondes");
           if(!this.fightEngaged){
            client.say(channel, `J'ai ${this.life} point de vie! Essayer de me battre petits cloportes`);
-           attackInterval = setInterval(()=>{this.attackPlayers(players)},5000);
+           attackInterval = setInterval(()=>{this.attackPlayers(players)},30000);
            this.fightEngaged = !this.fightEngaged;
           }
         } 
