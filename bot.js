@@ -47,6 +47,9 @@ client.on('chat', (channel, userstate, message, self) => {
     }
   }
 });
+
+
+
 // Register our event handlers (defined below)
 client.on('message', onMessageHandler);
 client.on('message', onFightHandler);
@@ -165,7 +168,7 @@ function onFightHandler(target, context, msg, self) {
 
 //check live status user 
  async function getLiveInformationUser(){
-  var url = 'https://api.twitch.tv/helix/streams?user_login=oyo1505';
+  let url = 'https://api.twitch.tv/helix/streams?user_login=oyo1505';
  return fetch(url, {
       headers: {
         'client-id' : process.env.CLIENT_ID,
@@ -173,11 +176,10 @@ function onFightHandler(target, context, msg, self) {
        } 
       })
   .then(res => res.json())
-  .then(data => data);
+  .then(data => data.data[0]);
 }
 async function onLive(){
-  const live = await getLiveInformationUser();
- 
+  let live = await getLiveInformationUser();
   if(live && live.type === 'live'){
     return true;
   }else if (!live){
@@ -195,11 +197,11 @@ const live = await onLive();
 }
 /*get new follower*/
 async function getLastFollower(){
-  var url= 'https://api.twitch.tv/helix/users/follows?first=1&to_id=55468567';
-  return await fetch(url, {
+  let url = 'https://api.twitch.tv/helix/users/follows?first=1&to_id=55468567';
+  return fetch(url, {
     headers: {
       'client-id' : process.env.CLIENT_ID,
-      'Authorization' :`Bearer   ${process.env.TWITCH_OAUTH_TOKEN}`
+      'Authorization' :`Bearer ${process.env.TWITCH_OAUTH_TOKEN}`
      } 
     })
 .then(res => res.json())
@@ -220,12 +222,12 @@ async function getFollowers(){
 .then(data =>{ userFollowers=data.data});
 }
 
-//setInterval(()=> newFollowerNotif(), 10000);
+setInterval(()=> newFollowerNotif(), 10000);
 async function newFollowerNotif(){
   let lastFollower = await getLastFollower();
-  let m = userFollowers.some(item => item.from_id === lastFollower.from_id)
+ let m = userFollowers.some(item => item.from_id === lastFollower.from_id)
   if(!m && !notifFollow){
-    client.say("#oyo1505", `Bienvenue à @${lastFollower.from_name} merci de suivre la chaîne, tu as très bon goût sache le ! :)`);
+    client.say("oyo1505", `Bienvenue à @${lastFollower.from_name} merci de suivre la chaîne, tu as très bon goût sache le ! :)`);
     await getFollowers();
     notifFollow = true;
   }else if (m){
@@ -252,3 +254,13 @@ async function runJoke(channel){
 function onConnectedHandler (addr, port) {
     console.log(`* Connected to ${addr}:${port}`);
 }
+
+setInterval(()=>sendMessageToChat(), 2700000)
+ async function sendMessageToChat(){
+    let live = await onLive();
+    if(live){
+      client.say("oyo1505", `Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️`);
+    }else if(!live){
+      return;
+    } 
+  }
