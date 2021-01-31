@@ -263,7 +263,7 @@ setInterval(()=>sendMessageToChat(), 2700000);
    "Pour être au courant des lancements d'un live veuillez suivre ce compte Twitter : https://twitter.com/bjr_le_monde",
    "Vous pouvez aussi me suivre sur instagram https://www.instagram.com/oyo1505/ "
   ];
-  let sentence = sentences[getRandomNumber(0,sentences.length)];
+  let sentence = sentences[getRandomNumber(0,sentences.length - 1)];
   let live = await onLive();
     if(live){
       client.say("oyo1505", `${sentence}`);
