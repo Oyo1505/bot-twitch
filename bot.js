@@ -1,6 +1,7 @@
 import tmi  from 'tmi.js';
 import fetch from 'node-fetch';
 import BotFighter  from './BotFighter.js';
+import {getRandomNumber}  from './utils/utils.js'
 import {Warrior, Priest, Mage, Warlock, Hunter} from './Characters.js';
 
 //init botFighter and Charaters
@@ -255,12 +256,20 @@ function onConnectedHandler (addr, port) {
     console.log(`* Connected to ${addr}:${port}`);
 }
 
-setInterval(()=>sendMessageToChat(), 2700000)
+setInterval(()=>sendMessageToChat(), 2700000);
  async function sendMessageToChat(){
-    let live = await onLive();
+   let sentences=[
+   "Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️",
+   "Pour être au courant des lancements d'un live veuillez suivre ce compte Twitter : https://twitter.com/bjr_le_monde",
+   "Vous pouvez aussi me suivre sur instagram https://www.instagram.com/oyo1505/ "
+  ];
+  let sentence = sentences[getRandomNumber(0,sentences.length)];
+  let live = await onLive();
     if(live){
-      client.say("oyo1505", `Vous aimez le stream ? N\'oubliez pas de me Follow sur Twitch en cliquant sur le ❤️`);
+      client.say("oyo1505", `${sentence}`);
     }else if(!live){
       return;
     } 
   }
+
+  
