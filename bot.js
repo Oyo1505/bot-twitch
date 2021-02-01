@@ -64,7 +64,7 @@ client.on("join", (channel, username, self) => {
   if(self){return;} // Ignore messages from the bot
   onLiveMessageToUser(channel, username);
 });
-const usersOnChat = [ "oyo1505", "commanderroot", "anotherttvviewer", "wizebot", "moobot"];
+const usersOnChat = ["oyo1505", "commanderroot", "anotherttvviewer", "wizebot", "moobot", "soiaok", "tetedemulatre","sillygnome225", "saddestkitty", "abbottcostello", "cristianclq", "electricallongboard", "ftopayr","extramoar", "droopdoggg", "bingcortana", "casinothanks", "gowithhim", "jointeffortt", "icewizerds", "ildelara", "communityshowcase"];
 const commandList= [
   ['!rules', `Respectez-vous, soyez polis, pas de racisme... Bref, t'as compris. Aimez-vous les uns les autres BORDEL !!!` ],
   ['!insta','Le voilà : https://www.instagram.com/oyo1505/ Abonne toi :)'],
