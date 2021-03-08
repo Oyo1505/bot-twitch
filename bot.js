@@ -148,7 +148,7 @@ const commandChooseCharacter = [
   ['!warrior'],
   ['!hunter'],
   ['!priest'],
-]
+];
 function onFightHandler(target, context, msg, self) {
   const pseudo = context['display-name'];
   if(self){return;} // Ignore messages from the bot
