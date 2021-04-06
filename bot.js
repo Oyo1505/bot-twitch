@@ -191,7 +191,7 @@ async function onLiveMessageToUser(channel, username){
 const live = await onLive();
   if(live && !usersOnChat.includes(username)){
     usersOnChat.push(username)
-    client.say(channel, `Bonjour ${username} ! :)`);
+   // client.say(channel, `Bonjour ${username} ! :)`);
   }else if(!live){
     usersOnChat.splice(4, usersOnChat.length)
   } 
