@@ -20,7 +20,7 @@ const opts = {
       password: process.env.PASSWORD,
     },
     channels: [
-        'oyo1505',
+        '0y0_live',
         'soiaok'
       ]
 };
@@ -64,7 +64,7 @@ client.on("join", (channel, username, self) => {
   if(self){return;} // Ignore messages from the bot
   onLiveMessageToUser(channel, username);
 });
-const usersOnChat = ["oyo1505", "commanderroot", "anotherttvviewer", "wizebot", "moobot", "soiaok", "tetedemulatre","sillygnome225", "saddestkitty", "abbottcostello", "cristianclq", "electricallongboard", "ftopayr","extramoar", "droopdoggg", "bingcortana", "casinothanks", "gowithhim", "jointeffortt", "icewizerds", "ildelara", "communityshowcase"];
+const usersOnChat = ["0y0_live", "commanderroot", "anotherttvviewer", "wizebot", "moobot", "soiaok", "tetedemulatre","sillygnome225", "saddestkitty", "abbottcostello", "cristianclq", "electricallongboard", "ftopayr","extramoar", "droopdoggg", "bingcortana", "casinothanks", "gowithhim", "jointeffortt", "icewizerds", "ildelara", "communityshowcase"];
 const commandList= [
   ['!rules', `Respectez-vous, soyez polis, pas de racisme... Bref, t'as compris. Aimez-vous les uns les autres BORDEL !!!` ],
   ['!insta','Le voilà : https://www.instagram.com/oyo1505/ Abonne toi :)'],
@@ -169,7 +169,7 @@ function onFightHandler(target, context, msg, self) {
 
 //check live status user 
  async function getLiveInformationUser(){
-  let url = 'https://api.twitch.tv/helix/streams?user_login=oyo1505';
+  let url = 'https://api.twitch.tv/helix/streams?user_login=0y0_live';
  return fetch(url, {
       headers: {
         'client-id' : process.env.CLIENT_ID,
@@ -228,7 +228,7 @@ async function newFollowerNotif(){
   let lastFollower = await getLastFollower();
  let m = userFollowers.some(item => item.from_id === lastFollower.from_id)
   if(!m && !notifFollow){
-    client.say("oyo1505", `Bienvenue à @${lastFollower.from_name} merci de suivre la chaîne, tu as très bon goût sache le ! :)`);
+    client.say("0y0_live", `Bienvenue à @${lastFollower.from_name} merci de suivre la chaîne, tu as très bon goût sache le ! :)`);
     await getFollowers();
     notifFollow = true;
   }else if (m){
@@ -266,7 +266,7 @@ setInterval(()=>sendMessageToChat(), 2700000);
   let sentence = sentences[getRandomNumber(0,sentences.length - 1)];
   let live = await onLive();
     if(live){
-      client.say("oyo1505", `${sentence}`);
+      client.say("0y0_live", `${sentence}`);
     }else if(!live){
       return;
     } 

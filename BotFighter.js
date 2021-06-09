@@ -7,7 +7,7 @@ const opts = {
     password: process.env.PASSWORD,
   },
   channels: [
-      'oyo1505',
+      '0y0_live',
       'soiaok'
     ]
 };
@@ -52,7 +52,7 @@ client.connect();
            }else if(!playersAlive) {
              this.fightEngaged = false;
              this.makeAvaibleCharaterClass(players)
-             client.say("oyo1505", `Le combat est terminé, je vous ai battu... Vous êtes tres mauvais sachez le ! PJSalt PJSalt PJSalt `);
+             client.say("0y0_live", `Le combat est terminé, je vous ai battu... Vous êtes tres mauvais sachez le ! PJSalt PJSalt PJSalt `);
              clearInterval(attackInterval)
            }
           }

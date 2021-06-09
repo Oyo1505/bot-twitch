@@ -7,7 +7,7 @@ const opts = {
     password: process.env.PASSWORD,
   },
   channels: [
-      'oyo1505',
+      '0y0_live',
       'soiaok'
     ]
 };
@@ -29,7 +29,7 @@ class Character {
 
  init = (name, className)=>{
    if(this.isTaken){
-    client.say("oyo1505", `Désolé c'est déjà pris par ${this.name}`);
+    client.say("0y0_live", `Désolé c'est déjà pris par ${this.name}`);
      return;
    }
   this.life = getRandomNumber(400, 600);
@@ -37,16 +37,16 @@ class Character {
   this.className = className;
   this.isTaken = true;
   this.isDead = false;
-  client.say('oyo1505', `${this.name} à choisi la classe ${this.className}`)
+  client.say('0y0_live', `${this.name} à choisi la classe ${this.className}`)
  }
 
  playerEliminated(){
   if(this.life <= 0 && this.isTaken && !this.isDead){     
-    client.say("oyo1505", `${this.name}, t'es mort ! Noob `);
+    client.say("0y0_live", `${this.name}, t'es mort ! Noob `);
     this.isDead = true;
      return true;
    }else if(this.isTaken && this.life > 0){
-    client.say("oyo1505", `${this.name}  avec la classe ${this.className} vous reste ${this.life} de point de vie`)
+    client.say("0y0_live", `${this.name}  avec la classe ${this.className} vous reste ${this.life} de point de vie`)
     return false;
    }
  }
@@ -60,11 +60,11 @@ class Warrior extends Character{
   stunEnemy = (bot) =>{
     if(this.isTaken && !this.stunned){
       bot.isStunned = true;
-      client.say("oyo1505", `* :/ Je suis stun ...*`);
+      client.say("0y0_live", `* :/ Je suis stun ...*`);
       setTimeout(()=>{ bot.isStunned = false },30000);
       setTimeout(()=>{ this.stunned = false },60000);
     }else{
-      client.say("oyo1505", `Hé hé hé. Ton stun ne me fait rien`);
+      client.say("0y0_live", `Hé hé hé. Ton stun ne me fait rien`);
     }
     this.stunned = true;
   }
@@ -77,11 +77,11 @@ class Mage extends Character{
   freezeEnemy = (bot) =>{
     if(this.isTaken && !this.stunned){
       bot.isStunned = true;
-      client.say("oyo1505", `*JE PEUX PLUS BOUGER !!!*`);
+      client.say("0y0_live", `*JE PEUX PLUS BOUGER !!!*`);
       setTimeout(()=>{ bot.isStunned = false },30000);
       setTimeout(()=>{ this.stunned = false },45000);
     }else{
-      client.say("oyo1505", `Hé hé hé. Ton stun ne me fait rien`);
+      client.say("0y0_live", `Hé hé hé. Ton stun ne me fait rien`);
     }
   }
 }
@@ -97,12 +97,12 @@ class Priest extends Character{
         if(player.isTaken){
           let lifeAdded = getRandomNumber(50, 75);
           player.life = player.life + lifeAdded;
-          client.say("oyo1505", ` Le ${player.className}, ${player.name} à été soigne de ${lifeAdded} point de vie ! Tu as ${player.life} hp`);
+          client.say("0y0_live", ` Le ${player.className}, ${player.name} à été soigne de ${lifeAdded} point de vie ! Tu as ${player.life} hp`);
         }
       });
       setTimeout(()=>{this.hasBeenSpelled = false },60000);
     }else{
-      client.say("oyo1505", `Tu ne peux pas soigner! HA HA HA HA !`);
+      client.say("0y0_live", `Tu ne peux pas soigner! HA HA HA HA !`);
     }
     this.hasBeenSpelled = true;
   }
@@ -115,11 +115,11 @@ class Hunter extends Character{
   }
   dogAttack =(bot)=>{
     if(!this.dogAttacked && this.isTaken === true){
-      client.say("oyo1505", ` Aïe ! Putain de cleps ! `);  
-      bot.onFight("oyo1505", this.name );
+      client.say("0y0_live", ` Aïe ! Putain de cleps ! `);  
+      bot.onFight("0y0_live", this.name );
       setTimeout(()=>{this.dogAttacked = false },60000);
     }else{
-      client.say("oyo1505", `Ton clébard fait dodo ! FrankerZ `);
+      client.say("0y0_live", `Ton clébard fait dodo ! FrankerZ `);
     }
     this.dogAttacked = true;
   }
@@ -133,10 +133,10 @@ class Warlock extends Character{
   curseEnemy=(bot)=>{
     if(!bot.isCursed && this.isTaken === true){
       setTimeout(()=>{bot.isCursed = false}, 15000);
-      client.say("oyo1505", ` AAAHH!! Je sens mes forces partir.`);    
+      client.say("0y0_live", ` AAAHH!! Je sens mes forces partir.`);    
       setTimeout(()=>{this.cursed = false}, 45000);
     }else{
-      client.say("oyo1505", ` Misérable petit ${this.name} de pacotille, ta malédiction n'est pas disponible`);   
+      client.say("0y0_live", ` Misérable petit ${this.name} de pacotille, ta malédiction n'est pas disponible`);   
     }
     bot.isCursed = true;
     this.cursed = true;
