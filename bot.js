@@ -163,9 +163,9 @@ function onFightHandler(target, context, msg, self) {
    ''))));
 }
 
-//id oyo1505 = 55468567;
+//id 0y0_Live = 55468567;
 //id soiaok = 516281655;
-//id 0y0_bot = 58515726;
+//id 0y0_bot = 58515726
 
 //check live status user 
  async function getLiveInformationUser(){
